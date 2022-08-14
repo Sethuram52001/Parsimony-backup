@@ -1,0 +1,34 @@
+{
+  "name": "Parsimony",
+  "version": "1.0.0",
+  "description": "web-app to keep track of expenses",
+  "main": "index.js",
+  "repository": "git@github.com:Sethuram52001/Parsimony.git",
+  "author": "Sethuram <sethuram52001@gmail.com>",
+  "license": "MIT",
+  "scripts": {
+    "execute-husky": "npx husky install && npx husky add .husky/pre-commit \"npx --no-install lint-staged\"",
+    "prepare": "husky install"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged"
+    }
+  },
+  "devDependencies": {
+    "eslint": "^8.0.1",
+    "eslint-config-standard": "^17.0.0",
+    "eslint-plugin-import": "^2.25.2",
+    "eslint-plugin-n": "^15.0.0",
+    "eslint-plugin-promise": "^6.0.0",
+    "husky": "^8.0.1",
+    "lint-staged": "^13.0.3",
+    "prettier": "^2.7.1"
+  },
+  "lint-staged": {
+    "**/*.{js,jsx}": [
+      "eslint . --fix",
+      "prettier --write ."
+    ]
+  }
+}
