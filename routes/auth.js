@@ -9,10 +9,9 @@ router.post('/login', async (req, res) => {
   const user = await User.findOne({
     email,
   });
-  console.log(user);
 
   if (!user) {
-    return { status: 'error', error: 'Invalid login' };
+    return res.json({ status: 'error', error: 'Invalid login' });
   }
 
   const isPasswordValid = await comparePassword(password, user.password);
@@ -39,11 +38,15 @@ router.post('/register', async (req, res) => {
       name: user.name,
       email: user.email,
       password: hashedPassword,
+      accounts: user.accounts,
     });
-    return res.json({ status: 'success' });
+    return res.json({
+      status: 'success',
+      message: 'User created successfully!',
+    });
   } catch (error) {
     console.log(error);
-    return res.json({ status: 'error', error: 'Email already exists' });
+    return res.json({ status: 'error', error });
   }
 });
 
