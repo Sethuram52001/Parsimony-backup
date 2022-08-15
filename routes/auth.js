@@ -22,7 +22,7 @@ router.post('/login', async (req, res) => {
         name: user.name,
         email: user.email,
       },
-      process.env.JWT_SECRET,
+      process.env.JWT_SECRET
     );
     return res.json({ status: 'success', user: token });
   }

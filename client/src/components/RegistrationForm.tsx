@@ -7,7 +7,7 @@ const RegistrationForm = () => {
   const [password, setPassword] = useState('');
 
   const handleRegister = async (
-    event: React.MouseEvent<HTMLInputElement, MouseEvent>,
+    event: React.MouseEvent<HTMLInputElement, MouseEvent>
   ) => {
     event.preventDefault();
     const registrationData = JSON.stringify({

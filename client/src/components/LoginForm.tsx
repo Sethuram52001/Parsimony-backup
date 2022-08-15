@@ -6,7 +6,7 @@ const LoginForm = () => {
   const [password, setPassword] = useState('');
 
   const handleLogin = async (
-    event: React.MouseEvent<HTMLInputElement, MouseEvent>,
+    event: React.MouseEvent<HTMLInputElement, MouseEvent>
   ) => {
     event.preventDefault();
     console.log('clicked login');
