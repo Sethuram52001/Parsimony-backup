@@ -5,9 +5,7 @@ const { hashPassword, comparePassword } = require('../utils/password');
 const User = require('../models/user');
 
 router.post('/login', async (req, res) => {
-  console.log('login route');
   const { email, password } = JSON.parse(req.body.loginData);
-  console.log(email);
   const user = await User.findOne({
     email,
   });
@@ -34,7 +32,7 @@ router.post('/login', async (req, res) => {
 });
 
 router.post('/register', async (req, res) => {
-  const user = JSON.parse(req.body.registrationData);
+  const user = req.body;
   try {
     const hashedPassword = await hashPassword(user.password);
     await User.create({
