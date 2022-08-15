@@ -5,7 +5,6 @@ const transactionSchema = new mongoose.Schema(
     email: {
       type: String,
       required: true,
-      unique: true,
     },
     transactionType: {
       type: String,
