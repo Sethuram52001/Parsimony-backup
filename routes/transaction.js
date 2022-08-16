@@ -10,14 +10,14 @@ router.post('/transaction', async (req, res) => {
       transactionType,
       amount,
     });
+    return res.status(200).json({
+      isError: false,
+      message: 'Successfully created transaction record!',
+    });
   } catch (error) {
     console.log(error);
-    return res.json({ status: 'error', error });
+    return res.status(400).json({ isError: true, error });
   }
-  return res.json({
-    status: 'success',
-    message: 'Successfully created transaction record!',
-  });
 });
 
 module.exports = router;

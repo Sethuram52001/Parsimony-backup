@@ -11,12 +11,13 @@ router.post('/login', async (req, res) => {
   });
 
   if (!user) {
-    return res.json({ status: 'error', error: 'Invalid login' });
+    return res
+      .status(404)
+      .json({ isError: true, message: 'Cannot find the user!' });
   }
 
   const isPasswordValid = await comparePassword(password, user.password);
   if (isPasswordValid) {
-    console.log('valid password');
     const token = jwt.sign(
       {
         name: user.name,
@@ -24,10 +25,11 @@ router.post('/login', async (req, res) => {
       },
       process.env.JWT_SECRET
     );
-    return res.json({ status: 'success', user: token });
+    return res.status(200).json({ isError: false, user: token });
   }
-  console.log('invalid password');
-  return res.json({ status: 'error' });
+  return res
+    .status(401)
+    .json({ isError: true, message: 'Invalid login credentials!' });
 });
 
 router.post('/register', async (req, res) => {
@@ -40,13 +42,13 @@ router.post('/register', async (req, res) => {
       password: hashedPassword,
       accounts: user.accounts,
     });
-    return res.json({
-      status: 'success',
+    return res.status(200).json({
+      isError: false,
       message: 'User created successfully!',
     });
   } catch (error) {
     console.log(error);
-    return res.json({ status: 'error', error });
+    return res.status(400).json({ isError: true, error });
   }
 });
 
