@@ -1,10 +1,13 @@
 const express = require('express');
 const router = express.Router();
 const Transaction = require('../models/transaction');
+const { auth } = require('../middleware/auth');
+const User = require('../models/user');
 
-router.post('/transaction', async (req, res) => {
-  const { email, transactionType, amount } = req.body;
+router.post('/transaction', auth, async (req, res) => {
+  const { transactionType, amount } = req.body;
   try {
+    const { email } = await User.findById(req.user.id).select('email');
     await Transaction.create({
       email,
       transactionType,
@@ -20,16 +23,15 @@ router.post('/transaction', async (req, res) => {
   }
 });
 
-router.put('/transaction/:transactionId', async (req, res) => {
+router.put('/transaction/:transactionId', auth, async (req, res) => {
   const { transactionId } = req.params;
-  const { email, transactionType, amount } = req.body;
+  const { transactionType, amount } = req.body;
   try {
     await Transaction.updateOne(
       {
         _id: transactionId,
       },
       {
-        email,
         transactionType,
         amount,
       },
@@ -47,7 +49,7 @@ router.put('/transaction/:transactionId', async (req, res) => {
   }
 });
 
-router.delete('/transaction/:transactionId', async (req, res) => {
+router.delete('/transaction/:transactionId', auth, async (req, res) => {
   const { transactionId } = req.params;
   try {
     await Transaction.deleteOne({

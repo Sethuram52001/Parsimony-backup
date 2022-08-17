@@ -90,16 +90,13 @@ router.get('/user/info', auth, async (req, res) => {
   }
 });
 
-router.put('/user/:gmailId/add-account', async (req, res) => {
-  const { gmailId } = req.params;
+router.put('/user/add-account', auth, async (req, res) => {
   try {
-    const user = await User.findOne({
-      email: gmailId,
-    });
+    const user = await User.findById(req.user.id).select('-password');
     if (user) {
       await User.updateOne(
         {
-          email: gmailId,
+          _id: user._id,
         },
         {
           accounts: [...user.accounts, req.body.account],
@@ -123,21 +120,18 @@ router.put('/user/:gmailId/add-account', async (req, res) => {
   }
 });
 
-router.put('/user/:gmailId/delete-account', async (req, res) => {
-  const { gmailId } = req.params;
+router.put('/user/delete-account', auth, async (req, res) => {
   try {
     const accountToBeDeleted = req.body.account.accountName;
     if (accountToBeDeleted && typeof accountToBeDeleted !== 'undefined') {
-      const user = await User.findOne({
-        email: gmailId,
-      });
+      const user = await User.findById(req.user.id).select('-password');
       if (user) {
         const updatedAccounts = [...user.accounts].filter(
           (account) => account.accountName !== accountToBeDeleted
         );
         await User.updateOne(
           {
-            email: gmailId,
+            _id: user._id,
           },
           {
             accounts: [...updatedAccounts],
