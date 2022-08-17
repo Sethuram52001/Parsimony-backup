@@ -1,6 +1,5 @@
 const express = require('express');
 const cors = require('cors');
-const auth = require('./routes/auth');
 const transaction = require('./routes/transaction');
 const user = require('./routes/user');
 const mongoose = require('mongoose');
@@ -12,7 +11,6 @@ mongoose.connect('mongodb://localhost:27017/Parsimony');
 
 app.use(cors());
 app.use(express.json());
-app.use('/api', auth);
 app.use('/api', transaction);
 app.use('/api', user);
 
