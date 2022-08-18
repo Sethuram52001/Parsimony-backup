@@ -7,19 +7,16 @@ const RegistrationForm = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
-  const handleRegister = async (
-    event: React.MouseEvent<HTMLInputElement, MouseEvent>
-  ) => {
+  const handleRegister = async (event: React.MouseEvent<HTMLElement>) => {
     event.preventDefault();
-    const registrationData = JSON.stringify({
-      name,
-      email,
-      password,
-    });
-
-    const response = await axios.post('http://localhost:5000/api/register', {
-      registrationData,
-    });
+    const response = await axios.post(
+      'http://localhost:5000/api/user/register',
+      {
+        name,
+        email,
+        password,
+      }
+    );
     console.log(response);
   };
 
@@ -61,7 +58,7 @@ const RegistrationForm = () => {
       <Button
         variant="contained"
         sx={{ width: '90%' }}
-        onClick={() => handleRegister}
+        onClick={(event) => handleRegister(event)}
       >
         Register
       </Button>

@@ -6,18 +6,13 @@ const LoginForm = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
-  const handleLogin = async (
-    event: React.MouseEvent<HTMLInputElement, MouseEvent>
-  ) => {
+  const handleLogin = async (event: React.MouseEvent<HTMLElement>) => {
     event.preventDefault();
-    console.log('clicked login');
-    const loginData = JSON.stringify({
+    const res = await axios.post('http://localhost:5000/api/user/login', {
       email,
       password,
     });
-    const res = await axios.post('http://localhost:5000/api/login', {
-      loginData,
-    });
+    console.log(res);
     if (res.data.user) {
       alert('login successful');
       localStorage.setItem('token', res.data.user);
@@ -58,7 +53,7 @@ const LoginForm = () => {
       <Button
         variant="contained"
         sx={{ width: '90%' }}
-        onClick={() => handleLogin}
+        onClick={(event) => handleLogin(event)}
       >
         Login
       </Button>
