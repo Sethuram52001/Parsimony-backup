@@ -1,5 +1,6 @@
 import axios from 'axios';
 import React, { useState } from 'react';
+import { Box, TextField, Button, Typography, Divider } from '@mui/material';
 
 const LoginForm = () => {
   const [email, setEmail] = useState('');
@@ -28,31 +29,40 @@ const LoginForm = () => {
   };
 
   return (
-    <React.Fragment>
-      <form>
-        <label>
-          Email:
-          <input
-            type="email"
-            name="email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-          />
-        </label>
-        <br />
-        <label>
-          Password:
-          <input
-            type="password"
-            name="password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-          />
-        </label>
-        <br />
-        <input type="submit" value="Login" onClick={handleLogin} />
-      </form>
-    </React.Fragment>
+    <Box
+      component="form"
+      textAlign="center"
+      alignItems="center"
+      sx={{ width: 300 }}
+    >
+      <Typography variant="h4">Login</Typography>
+      <Divider />
+      <TextField
+        type="email"
+        variant="filled"
+        label="Email"
+        fullWidth
+        sx={{ mb: 2, mt: 2 }}
+        value={email}
+        onChange={(e) => setEmail(e.target.value)}
+      />
+      <TextField
+        type="password"
+        variant="filled"
+        label="Password"
+        fullWidth
+        sx={{ mb: 2 }}
+        value={password}
+        onChange={(e) => setPassword(e.target.value)}
+      />
+      <Button
+        variant="contained"
+        sx={{ width: '90%' }}
+        onClick={() => handleLogin}
+      >
+        Login
+      </Button>
+    </Box>
   );
 };
 
