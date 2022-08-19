@@ -1,10 +1,13 @@
 import axios from 'axios';
 import React, { useState } from 'react';
 import { Box, TextField, Button, Typography, Divider } from '@mui/material';
+import { useDispatch } from 'react-redux';
+import { authActions } from '../store/authSlice';
 
 const LoginForm = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const dispatch = useDispatch();
 
   const handleLogin = async (event: React.MouseEvent<HTMLElement>) => {
     event.preventDefault();
@@ -12,12 +15,11 @@ const LoginForm = () => {
       email,
       password,
     });
-    console.log(res);
-    if (res.data.user) {
+    if (res.data.token) {
       alert('login successful');
-      localStorage.setItem('token', res.data.user);
-      console.log(res.data.user);
-      window.location.href = '/dashboard';
+      localStorage.setItem('token', JSON.stringify(res.data.token));
+      console.log(localStorage.getItem('token'));
+      dispatch(authActions.login());
     } else {
       alert('invalid login credentials');
     }
