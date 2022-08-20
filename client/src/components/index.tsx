@@ -2,5 +2,6 @@ import LoginForm from './LoginForm';
 import RegistrationForm from './RegistrationForm';
 import GuestGuard from './GuestGuard';
 import UserGuard from './UserGuard';
+import Navbar from './Navbar';
 
-export { LoginForm, RegistrationForm, GuestGuard, UserGuard };
+export { LoginForm, RegistrationForm, GuestGuard, UserGuard, Navbar };

@@ -6,12 +6,14 @@ import {
   RegistrationForm,
   GuestGuard,
   UserGuard,
+  Navbar,
 } from './components';
 import Dashboard from './pages/Dashboard';
 
 const App = () => {
   return (
     <BrowserRouter>
+      <Navbar />
       <Routes>
         <Route
           path="/login"
