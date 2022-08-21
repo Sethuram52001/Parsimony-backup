@@ -3,5 +3,13 @@ import RegistrationForm from './RegistrationForm';
 import GuestGuard from './GuestGuard';
 import UserGuard from './UserGuard';
 import Navbar from './Navbar';
+import Transactions from './Transactions';
 
-export { LoginForm, RegistrationForm, GuestGuard, UserGuard, Navbar };
+export {
+  LoginForm,
+  RegistrationForm,
+  GuestGuard,
+  UserGuard,
+  Navbar,
+  Transactions,
+};
