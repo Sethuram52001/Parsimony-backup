@@ -70,7 +70,9 @@ router.delete('/transaction/:transactionId', auth, async (req, res) => {
 router.get('/transaction/get-transactions', auth, async (req, res) => {
   const { email } = await User.findById(req.user.id).select('email');
   try {
-    const transactions = await Transaction.find({ email }).exec();
+    const transactions = await Transaction.find({ email })
+      .sort({ createdAt: -1 })
+      .exec();
     return res.status(200).json({ isError: false, transactions });
   } catch (error) {
     console.log(error);
