@@ -38,6 +38,9 @@ const Transactions = () => {
             email={transaction.email}
             transactionType={transaction.transactionType}
             amount={transaction.amount}
+            category={transaction.category}
+            description={transaction.description}
+            createdAt={transaction.createdAt}
           />
         ))}
     </div>
