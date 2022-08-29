@@ -18,6 +18,28 @@ const transactionSchema = new mongoose.Schema(
       type: Number,
       min: [0, 'Must be at least 0, got {VALUE}'],
     },
+    category: {
+      type: String,
+      enum: {
+        values: [
+          'Food and Drinks',
+          'Shopping',
+          'Housing',
+          'Transportation',
+          'Life & Entertainment',
+          'Communication, PC',
+          'Financial expenses',
+          'Investments',
+          'Income',
+          'Others',
+        ],
+        message: '{VALUE} is not supported',
+      },
+      required: true,
+    },
+    description: {
+      type: String,
+    },
   },
   {
     timestamps: true,

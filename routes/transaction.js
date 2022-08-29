@@ -5,13 +5,15 @@ const { auth } = require('../middleware/auth');
 const User = require('../models/user');
 
 router.post('/transaction', auth, async (req, res) => {
-  const { transactionType, amount } = req.body;
+  const { transactionType, amount, category, description } = req.body;
   try {
     const { email } = await User.findById(req.user.id).select('email');
     await Transaction.create({
       email,
       transactionType,
       amount,
+      category,
+      description,
     });
     return res.status(200).json({
       isError: false,
