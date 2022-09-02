@@ -29,13 +29,11 @@ const Transactions = () => {
   }, []);
 
   return (
-    <div>
+    <div style={{ marginLeft: '10px' }}>
       {transactions &&
         transactions.map((transaction) => (
           <Transaction
             key={transaction._id}
-            id={transaction._id}
-            email={transaction.email}
             transactionType={transaction.transactionType}
             amount={transaction.amount}
             category={transaction.category}
