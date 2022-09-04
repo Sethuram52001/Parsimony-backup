@@ -14,6 +14,10 @@ const transactionSchema = new mongoose.Schema(
       },
       required: true,
     },
+    account: {
+      type: String,
+      required: true,
+    },
     amount: {
       type: Number,
       min: [0, 'Must be at least 0, got {VALUE}'],
