@@ -7,16 +7,41 @@ const User = require('../models/user');
 router.post('/transaction', auth, async (req, res) => {
   const { transactionType, amount, accounts, category, description } = req.body;
   try {
-    const { email } = await User.findById(req.user.id).select('email');
+    const user = await User.findById(req.user.id).select('-password');
     const account = accounts[0];
+
+    const accountToBeUpdated = user.accounts.filter(
+      (acc) => acc.accountName === account
+    )[0];
+    let updatedBalance = accountToBeUpdated.balance;
+    updatedBalance += transactionType === 'expense' ? -amount : amount;
+    const updatedAccounts = user.accounts;
+
+    for (const acc of updatedAccounts) {
+      if (acc.accountName === account) {
+        acc.balance = updatedBalance;
+        break;
+      }
+    }
+
+    await User.updateOne(
+      {
+        _id: user._id,
+      },
+      {
+        accounts: updatedAccounts,
+      }
+    );
+
     await Transaction.create({
-      email,
+      email: user.email,
       transactionType,
       account,
       amount,
       category,
       description,
     });
+
     return res.status(200).json({
       isError: false,
       message: 'Successfully created transaction record!',
@@ -75,12 +100,34 @@ router.delete('/transaction/:transactionId', auth, async (req, res) => {
 router.post('/transaction/transfer', auth, async (req, res) => {
   const { transactionType, amount, accounts, category, description } = req.body;
   try {
-    const { email } = await User.findById(req.user.id).select('email');
+    const user = await User.findById(req.user.id).select('-password');
     const accountCredited = accounts[0];
     const accountDebited = accounts[1];
 
+    let accountToBeUpdated = user.accounts.filter(
+      (acc) => acc.accountName === accountCredited
+    )[0];
+    let updatedBalance = accountToBeUpdated.balance - amount;
+    let updatedAccounts = user.accounts;
+
+    for (const acc of updatedAccounts) {
+      if (acc.accountName === accountCredited) {
+        acc.balance = updatedBalance;
+        break;
+      }
+    }
+
+    await User.updateOne(
+      {
+        _id: user._id,
+      },
+      {
+        accounts: updatedAccounts,
+      }
+    );
+
     await Transaction.create({
-      email,
+      email: user.email,
       transactionType,
       account: accountCredited,
       amount,
@@ -88,8 +135,31 @@ router.post('/transaction/transfer', auth, async (req, res) => {
       description,
     });
 
+    accountToBeUpdated = user.accounts.filter(
+      (acc) => acc.accountName === accountDebited
+    )[0];
+    updatedBalance = accountToBeUpdated.balance;
+    updatedBalance += transactionType === 'expense' ? -amount : amount;
+    updatedAccounts = user.accounts;
+
+    for (const acc of updatedAccounts) {
+      if (acc.accountName === accountDebited) {
+        acc.balance = updatedBalance;
+        break;
+      }
+    }
+
+    await User.updateOne(
+      {
+        _id: user._id,
+      },
+      {
+        accounts: updatedAccounts,
+      }
+    );
+
     await Transaction.create({
-      email,
+      email: user.email,
       transactionType,
       account: accountDebited,
       amount,
