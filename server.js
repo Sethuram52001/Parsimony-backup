@@ -11,8 +11,8 @@ mongoose.connect('mongodb://localhost:27017/Parsimony');
 
 app.use(cors());
 app.use(express.json());
-app.use('/api', transaction);
-app.use('/api', user);
+app.use('/api/transaction', transaction);
+app.use('/api/user', user);
 
 app.listen(port, () => {
   console.log(`Server has started on port ${port}`);
