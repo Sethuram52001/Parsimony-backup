@@ -1,6 +1,6 @@
 import axios from 'axios';
-import React, { useEffect, useState } from 'react';
-import Transaction from './Transaction';
+import { useState, useEffect } from 'react';
+import TransactionCard from './TransactionCard';
 
 const Transactions = () => {
   const [transactions, setTransactions] = useState<any[]>([]);
@@ -13,11 +13,11 @@ const Transactions = () => {
       },
     };
 
-    const response = await axios.get(
+    const res = await axios.get(
       'http://localhost:5000/api/transaction/get-transactions',
       config
     );
-    const { transactions } = response.data;
+    const { transactions } = res.data;
     return transactions;
   };
 
@@ -32,9 +32,10 @@ const Transactions = () => {
     <div style={{ marginLeft: '10px' }}>
       {transactions &&
         transactions.map((transaction) => (
-          <Transaction
+          <TransactionCard
             key={transaction._id}
             transactionType={transaction.transactionType}
+            account={transaction.account}
             amount={transaction.amount}
             category={transaction.category}
             description={transaction.description}
