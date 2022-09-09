@@ -1,6 +1,4 @@
-import * as React from 'react';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
-import Login from './pages/Login';
 import {
   LoginForm,
   RegistrationForm,
@@ -8,7 +6,7 @@ import {
   UserGuard,
   Navbar,
 } from './components';
-import Dashboard from './pages/Dashboard';
+import { Login, Dashboard, Transactions } from './pages';
 
 const App = () => {
   return (
@@ -34,6 +32,7 @@ const App = () => {
             </GuestGuard>
           }
         />
+        <Route path="/transactions" element={<Transactions />} />
       </Routes>
     </BrowserRouter>
   );
