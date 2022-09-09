@@ -4,6 +4,7 @@ import GuestGuard from './GuestGuard';
 import UserGuard from './UserGuard';
 import Navbar from './Navbar';
 import Transactions from './Transaction/Transactions';
+import Filter from './Transaction/Filter';
 
 export {
   LoginForm,
@@ -12,4 +13,5 @@ export {
   UserGuard,
   Navbar,
   Transactions,
+  Filter,
 };
