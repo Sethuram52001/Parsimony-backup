@@ -24,7 +24,6 @@ interface TransactionIconInterface {
 }
 
 const TransactionIcon = ({ category }: TransactionIconInterface) => {
-  console.log('transaction icon');
   return (
     <Icon
       sx={{
