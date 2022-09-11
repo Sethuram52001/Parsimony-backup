@@ -7,6 +7,7 @@ const {
   deleteTransaction,
   transferTypeTransaction,
   getTransactions,
+  getTransactionsByDate,
 } = require('../controllers/transactions.controller');
 
 router.post('/', auth, createTransaction);
@@ -18,5 +19,7 @@ router.delete('/:transactionId', auth, deleteTransaction);
 router.post('/transfer', auth, transferTypeTransaction);
 
 router.get('/get-transactions', auth, getTransactions);
+
+router.get('/get-transactions-by-date', auth, getTransactionsByDate);
 
 module.exports = router;
