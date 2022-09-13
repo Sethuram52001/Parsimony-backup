@@ -1,3 +1,4 @@
+const moment = require('moment');
 const Transaction = require('../models/transaction');
 const User = require('../models/user');
 
@@ -196,33 +197,28 @@ const getTransactions = async (req, res) => {
 
 const getTransactionsByDate = async (req, res) => {
   const { email } = await User.findById(req.user.id).select('email');
-  let { timePeriod, fromDate, toDate } = req.body;
-
-  if (timePeriod === 'Today') {
-    fromDate = new Date(new Date(fromDate).setHours(0, 0, 0));
-    toDate = new Date(new Date(toDate).setHours(23, 59, 59));
-  } else if (timePeriod === 'This month') {
-    const months = {
-      January: 0,
-      February: 1,
-      March: 2,
-      April: 3,
-      May: 4,
-      June: 5,
-      July: 6,
-      August: 7,
-      September: 8,
-      October: 9,
-      November: 10,
-      December: 11,
-    };
-    const month = months[fromDate];
-    const year = new Date().getFullYear();
-    fromDate = new Date(new Date(year, month, 1).setHours(0, 0, 0));
-    toDate = new Date(new Date(year, month + 1, 0).setHours(23, 59, 59));
-  } else if (timePeriod === 'This year') {
-    fromDate = new Date(new Date(fromDate, 0, 1).setHours(0, 0, 0));
-    toDate = new Date(new Date(toDate, 11, 31).setHours(23, 59, 59));
+  const { timeSpan } = req.body;
+  let fromDate, toDate;
+  if (timeSpan === 'Day') {
+    const { date } = req.body;
+    fromDate = moment(date).set({ hour: 0, minute: 0, second: 0 });
+    toDate = moment(fromDate).add(1, 'day');
+  } else if (timeSpan === 'Month') {
+    let { date: month } = req.body;
+    month = moment().month(month).format('M') - 1;
+    fromDate = moment().set({ month, date: 1, hour: 0, minute: 0, second: 0 });
+    toDate = moment(fromDate).add(1, 'month');
+  } else if (timeSpan === 'Year') {
+    const { date: year } = req.body;
+    fromDate = moment().set({
+      year,
+      month: 0,
+      date: 1,
+      hour: 0,
+      minute: 0,
+      second: 0,
+    });
+    toDate = moment(fromDate).add(1, 'year');
   }
 
   try {
@@ -230,7 +226,7 @@ const getTransactionsByDate = async (req, res) => {
       email,
       createdAt: {
         $gte: fromDate,
-        $lte: toDate,
+        $lt: toDate,
       },
     }).sort({ createdAt: 'desc' });
     return res.status(200).json({ isError: false, transactions });
