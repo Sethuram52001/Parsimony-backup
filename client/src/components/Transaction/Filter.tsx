@@ -20,25 +20,6 @@ const Filter = () => {
     'This year': 'YYYY',
   };
 
-  type monthsMappingType = {
-    [key: string]: number;
-  };
-
-  const monthsMapping: monthsMappingType = {
-    January: 0,
-    February: 1,
-    March: 2,
-    April: 3,
-    May: 4,
-    June: 5,
-    July: 6,
-    August: 7,
-    September: 8,
-    October: 9,
-    November: 10,
-    December: 11,
-  };
-
   const currentDate = moment();
   const [timePeriod, setTimePeriod] = useState('Today');
   const [selectedTime, setSelectedTime] = useState(
@@ -56,7 +37,8 @@ const Filter = () => {
     if (timePeriod === 'Today') {
       newSelectedTime.subtract(1, 'days');
     } else if (timePeriod === 'This month') {
-      newSelectedTime = moment().set('month', monthsMapping[selectedTime]);
+      const month: number = +moment().month(selectedTime).format('M') - 1;
+      newSelectedTime = moment().set('month', month);
       newSelectedTime.subtract(1, 'months');
     } else {
       newSelectedTime.subtract(1, 'years');
@@ -69,7 +51,8 @@ const Filter = () => {
     if (timePeriod === 'Today') {
       newSelectedTime.add(1, 'days');
     } else if (timePeriod === 'This month') {
-      newSelectedTime = moment().set('month', monthsMapping[selectedTime]);
+      const month: number = +moment().month(selectedTime).format('M') - 1;
+      newSelectedTime = moment().set('month', month);
       newSelectedTime.add(1, 'months');
     } else {
       newSelectedTime.add(1, 'years');
