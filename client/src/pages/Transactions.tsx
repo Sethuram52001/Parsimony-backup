@@ -1,12 +1,12 @@
 import * as React from 'react';
-import { Transactions as Records, Filter } from '../components';
+import { TransactionsList, Filter } from '../components';
 
 const Transactions = () => {
   return (
     <React.Fragment>
       <h1>Transactions</h1>
       <Filter />
-      <Records />
+      <TransactionsList />
     </React.Fragment>
   );
 };

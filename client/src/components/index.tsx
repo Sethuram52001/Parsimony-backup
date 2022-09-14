@@ -3,7 +3,7 @@ import RegistrationForm from './RegistrationForm';
 import GuestGuard from './GuestGuard';
 import UserGuard from './UserGuard';
 import Navbar from './Navbar';
-import Transactions from './Transaction/Transactions';
+import TransactionsList from './Transaction/TransactionsList';
 import Filter from './Transaction/Filter';
 
 export {
@@ -12,6 +12,6 @@ export {
   GuestGuard,
   UserGuard,
   Navbar,
-  Transactions,
+  TransactionsList,
   Filter,
 };

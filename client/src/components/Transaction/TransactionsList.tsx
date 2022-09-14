@@ -1,7 +1,7 @@
 import TransactionCard from './TransactionCard';
 import { default as api } from '../../store/apiSlice';
 
-const Transactions = () => {
+const TransactionsList = () => {
   let transactions;
   const { data, isFetching, isSuccess, isError } =
     api.useGetTransactionsQuery();
@@ -33,4 +33,4 @@ const Transactions = () => {
   );
 };
 
-export default Transactions;
+export default TransactionsList;
