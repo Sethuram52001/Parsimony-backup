@@ -1,6 +1,6 @@
 import React from 'react';
 import { Navigate } from 'react-router-dom';
-import { useAppSelector as useSelector } from '../hooks/hooks';
+import { useAppSelector as useSelector } from '../../hooks/hooks';
 
 interface UserGuardProps {
   children: React.ReactNode;

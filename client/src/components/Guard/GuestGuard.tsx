@@ -1,5 +1,5 @@
 import { Navigate } from 'react-router-dom';
-import { useAppSelector as useSelector } from '../hooks/hooks';
+import { useAppSelector as useSelector } from '../../hooks/hooks';
 
 interface GuestGuardProps {
   children: React.ReactNode;

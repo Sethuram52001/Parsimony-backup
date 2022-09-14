@@ -1,10 +1,7 @@
-import LoginForm from './LoginForm';
-import RegistrationForm from './RegistrationForm';
-import GuestGuard from './GuestGuard';
-import UserGuard from './UserGuard';
-import Navbar from './Navbar';
-import TransactionsList from './Transaction/TransactionsList';
-import Filter from './Transaction/Filter';
+import { LoginForm, RegistrationForm } from './Login';
+import { GuestGuard, UserGuard } from './Guard';
+import { Navbar } from './Navbar';
+import { TransactionsList, Filter } from './Transaction';
 
 export {
   LoginForm,

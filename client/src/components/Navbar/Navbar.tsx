@@ -3,7 +3,7 @@ import * as React from 'react';
 import { AppBar, Toolbar, IconButton } from '@mui/material';
 import { AccountCircle } from '@mui/icons-material';
 import { useDispatch } from 'react-redux';
-import { authActions } from '../store/authSlice';
+import { authActions } from '../../store/authSlice';
 
 const Navbar = () => {
   const dispatch = useDispatch();

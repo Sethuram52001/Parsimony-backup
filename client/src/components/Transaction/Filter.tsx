@@ -60,8 +60,6 @@ const Filter = () => {
     setSelectedTime(newSelectedTime.format(dateFormats[timePeriod]));
   };
 
-  console.log(currentDate);
-
   return (
     <Box sx={{ width: '500px', display: 'flex' }}>
       <IconButton onClick={decreaseTimePeriod}>

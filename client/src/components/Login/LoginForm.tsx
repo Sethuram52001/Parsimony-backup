@@ -2,7 +2,7 @@ import axios from 'axios';
 import React, { useState } from 'react';
 import { Box, TextField, Button, Typography, Divider } from '@mui/material';
 import { useDispatch } from 'react-redux';
-import { authActions } from '../store/authSlice';
+import { authActions } from '../../store/authSlice';
 
 const LoginForm = () => {
   const [email, setEmail] = useState('');
