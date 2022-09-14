@@ -197,19 +197,19 @@ const getTransactions = async (req, res) => {
 
 const getTransactionsByDate = async (req, res) => {
   const { email } = await User.findById(req.user.id).select('email');
-  const { timeSpan } = req.body;
+  const { timeSpan } = req.query;
   let fromDate, toDate;
   if (timeSpan === 'Day') {
-    const { date } = req.body;
+    const { date } = req.query;
     fromDate = moment(date).set({ hour: 0, minute: 0, second: 0 });
     toDate = moment(fromDate).add(1, 'day');
   } else if (timeSpan === 'Month') {
-    let { date: month } = req.body;
+    let { date: month } = req.query;
     month = moment().month(month).format('M') - 1;
     fromDate = moment().set({ month, date: 1, hour: 0, minute: 0, second: 0 });
     toDate = moment(fromDate).add(1, 'month');
   } else if (timeSpan === 'Year') {
-    const { date: year } = req.body;
+    const { date: year } = req.query;
     fromDate = moment().set({
       year,
       month: 0,
