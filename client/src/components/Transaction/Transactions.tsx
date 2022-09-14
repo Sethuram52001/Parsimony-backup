@@ -1,32 +1,19 @@
-import axios from 'axios';
-import { useState, useEffect } from 'react';
 import TransactionCard from './TransactionCard';
+import { default as api } from '../../store/apiSlice';
 
 const Transactions = () => {
-  const [transactions, setTransactions] = useState<any[]>([]);
-
-  const getTransactions = async () => {
-    const token = localStorage.getItem('token')!;
-    const config = {
-      headers: {
-        'x-auth-token': token,
-      },
-    };
-
-    const res = await axios.get(
-      'http://localhost:5000/api/transaction/get-transactions',
-      config
-    );
-    const { transactions } = res.data;
-    return transactions;
-  };
-
-  useEffect(() => {
-    (async () => {
-      const transactions = await getTransactions();
-      setTransactions(transactions);
-    })();
-  }, []);
+  let transactions;
+  const { data, isFetching, isSuccess, isError } =
+    api.useGetTransactionsQuery();
+  if (isFetching) {
+    console.log('fetching');
+  } else if (isSuccess) {
+    console.log(data);
+    const { transactions: tx } = data;
+    transactions = tx;
+  } else if (isError) {
+    console.log('error');
+  }
 
   return (
     <div style={{ marginLeft: '10px' }}>
