@@ -2,6 +2,7 @@ import { LoginForm, RegistrationForm } from './Login';
 import { GuestGuard, UserGuard } from './Guard';
 import { Navbar } from './Navbar';
 import { TransactionsList, Filter } from './Transaction';
+import { LoadingTransactions } from './Loading';
 
 export {
   LoginForm,
@@ -11,4 +12,5 @@ export {
   Navbar,
   TransactionsList,
   Filter,
+  LoadingTransactions,
 };
