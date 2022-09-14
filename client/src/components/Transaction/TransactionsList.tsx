@@ -1,10 +1,15 @@
 import TransactionCard from './TransactionCard';
 import { default as api } from '../../store/apiSlice';
+import { useAppSelector as useSelector } from '../../hooks/hooks';
 
 const TransactionsList = () => {
+  const timeSpan = useSelector((state) => state.filter.timeSpan);
+  const date = useSelector((state) => state.filter.date);
   let transactions;
-  const { data, isFetching, isSuccess, isError } =
-    api.useGetTransactionsQuery();
+  const { data, isFetching, isSuccess, isError } = api.useGetTransactionsQuery({
+    timeSpan,
+    date,
+  });
   if (isFetching) {
     console.log('fetching');
   } else if (isSuccess) {

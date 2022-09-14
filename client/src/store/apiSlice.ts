@@ -16,7 +16,7 @@ interface Transactions {
   transactions: [Transaction];
 }
 
-const baseURI = 'http://localhost:5000';
+const baseURI = 'http://localhost:5000/api';
 
 export const apiSlice = createApi({
   baseQuery: fetchBaseQuery({
@@ -28,8 +28,13 @@ export const apiSlice = createApi({
     },
   }),
   endpoints: (builder) => ({
-    getTransactions: builder.query<Transactions, void>({
-      query: () => '/api/transaction/get-transactions',
+    getTransactions: builder.query<
+      Transactions,
+      { timeSpan: string; date: string }
+    >({
+      query: ({ timeSpan, date }) => ({
+        url: `/transaction/get-transactions-by-date?timeSpan=${timeSpan}&date=${date}`,
+      }),
     }),
   }),
 });
