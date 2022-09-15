@@ -14,7 +14,6 @@ const TransactionsList = () => {
   if (isFetching) {
     console.log('fetching');
   } else if (isSuccess) {
-    console.log(data);
     const { transactions: tx } = data;
     transactions = tx;
   } else if (isError) {

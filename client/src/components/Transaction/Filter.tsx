@@ -10,6 +10,7 @@ import { ArrowLeft, ArrowRight } from '@mui/icons-material';
 import moment from 'moment';
 import { useDispatch } from 'react-redux';
 import { filterActions } from '../../store/filterSlice';
+import { useAppSelector as useSelector } from '../../hooks/hooks';
 
 const Filter = () => {
   const dispatch = useDispatch();
@@ -19,21 +20,21 @@ const Filter = () => {
   };
 
   const dateFormats: dateFormatsType = {
-    Today: 'MMM DD',
-    'This month': 'MMMM',
-    'This year': 'YYYY',
+    Day: 'MMM DD',
+    Month: 'MMMM',
+    Year: 'YYYY',
   };
 
-  const [timePeriod, setTimePeriod] = useState('Today');
+  const timeSpan: string = useSelector((state) => state.filter.timeSpan);
   const [selectedTime, setSelectedTime] = useState(
-    moment().format(dateFormats[timePeriod])
+    moment().format(dateFormats[timeSpan])
   );
 
   const handleChange = (event: SelectChangeEvent) => {
     let timeSpan = event.target.value;
-    setTimePeriod(timeSpan as string);
     setSelectedTime(moment().format(dateFormats[timeSpan]));
-    if (timeSpan === 'Today') {
+    dispatch(filterActions.setTimeSpan(timeSpan as string));
+    if (timeSpan === 'Day') {
       dispatch(
         filterActions.setDate(
           moment()
@@ -46,20 +47,11 @@ const Filter = () => {
         filterActions.setDate(moment().format(dateFormats[timeSpan]) as string)
       );
     }
-    timeSpan =
-      timeSpan === 'Today'
-        ? 'Day'
-        : timeSpan === 'This month'
-        ? 'Month'
-        : timeSpan === 'This year'
-        ? 'Year'
-        : '';
-    dispatch(filterActions.setTimeSpan(timeSpan as string));
   };
 
   const decreaseTimePeriod = () => {
     let newSelectedTime = moment(selectedTime);
-    if (timePeriod === 'Today') {
+    if (timeSpan === 'Day') {
       newSelectedTime.subtract(1, 'days');
       dispatch(
         filterActions.setDate(
@@ -68,29 +60,29 @@ const Filter = () => {
             .format('YYYY-MM-DD') as string
         )
       );
-    } else if (timePeriod === 'This month') {
+    } else if (timeSpan === 'Month') {
       const month: number = +moment().month(selectedTime).format('M') - 1;
       newSelectedTime = moment().set('month', month);
       newSelectedTime.subtract(1, 'months');
       dispatch(
         filterActions.setDate(
-          newSelectedTime.format(dateFormats[timePeriod]) as string
+          newSelectedTime.format(dateFormats[timeSpan]) as string
         )
       );
     } else {
       newSelectedTime.subtract(1, 'years');
       dispatch(
         filterActions.setDate(
-          newSelectedTime.format(dateFormats[timePeriod]) as string
+          newSelectedTime.format(dateFormats[timeSpan]) as string
         )
       );
     }
-    setSelectedTime(newSelectedTime.format(dateFormats[timePeriod]));
+    setSelectedTime(newSelectedTime.format(dateFormats[timeSpan]));
   };
 
   const increaseTimePeriod = () => {
     let newSelectedTime = moment(selectedTime);
-    if (timePeriod === 'Today') {
+    if (timeSpan === 'Day') {
       newSelectedTime.add(1, 'days');
       dispatch(
         filterActions.setDate(
@@ -99,24 +91,24 @@ const Filter = () => {
             .format('YYYY-MM-DD') as string
         )
       );
-    } else if (timePeriod === 'This month') {
+    } else if (timeSpan === 'Month') {
       const month: number = +moment().month(selectedTime).format('M') - 1;
       newSelectedTime = moment().set('month', month);
       newSelectedTime.add(1, 'months');
       dispatch(
         filterActions.setDate(
-          newSelectedTime.format(dateFormats[timePeriod]) as string
+          newSelectedTime.format(dateFormats[timeSpan]) as string
         )
       );
     } else {
       newSelectedTime.add(1, 'years');
       dispatch(
         filterActions.setDate(
-          newSelectedTime.format(dateFormats[timePeriod]) as string
+          newSelectedTime.format(dateFormats[timeSpan]) as string
         )
       );
     }
-    setSelectedTime(newSelectedTime.format(dateFormats[timePeriod]));
+    setSelectedTime(newSelectedTime.format(dateFormats[timeSpan]));
   };
 
   return (
@@ -140,14 +132,10 @@ const Filter = () => {
       >
         {selectedTime}
       </Box>
-      <Select
-        sx={{ width: '150px' }}
-        value={timePeriod}
-        onChange={handleChange}
-      >
-        <MenuItem value={'Today'}>Today</MenuItem>
-        <MenuItem value={'This month'}>This month</MenuItem>
-        <MenuItem value={'This year'}>This year</MenuItem>
+      <Select sx={{ width: '150px' }} value={timeSpan} onChange={handleChange}>
+        <MenuItem value={'Day'}>Today</MenuItem>
+        <MenuItem value={'Month'}>This month</MenuItem>
+        <MenuItem value={'Year'}>This year</MenuItem>
       </Select>
       <IconButton onClick={increaseTimePeriod}>
         <ArrowRight
