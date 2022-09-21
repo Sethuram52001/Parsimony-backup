@@ -1,24 +1,24 @@
 const jwt = require('jsonwebtoken');
-const User = require('../models/user');
-const { hashPassword, comparePassword } = require('../utils/password');
+const { comparePassword } = require('../utils/password');
+const {
+  getUser,
+  findUser,
+  createUser,
+  updateUser,
+} = require('../services/user.service');
 
 const registerUser = async (req, res) => {
   const user = req.body;
   try {
-    const existingUser = await User.findOne({ email: user.email });
+    const existingUser = await findUser(user.email);
     if (existingUser) {
       return res.status(400).json({
         isError: true,
         message: 'Already an user exists with this email id',
       });
     }
-    const hashedPassword = await hashPassword(user.password);
-    const newUser = await User.create({
-      name: user.name,
-      email: user.email,
-      password: hashedPassword,
-      accounts: user.accounts,
-    });
+
+    const newUser = await createUser(user);
 
     const payload = {
       user: {
@@ -44,7 +44,7 @@ const registerUser = async (req, res) => {
 const loginUser = async (req, res) => {
   const { email, password } = req.body;
   try {
-    const user = await User.findOne({ email });
+    const user = await findUser(email);
     if (!user) {
       return res
         .status(400)
@@ -79,7 +79,7 @@ const loginUser = async (req, res) => {
 
 const getUserInfo = async (req, res) => {
   try {
-    const user = await User.findById(req.user.id).select('-password');
+    const user = await getUser(req.user.id);
     return res.status(200).json({ isError: false, user });
   } catch (error) {
     console.log(error);
@@ -89,19 +89,9 @@ const getUserInfo = async (req, res) => {
 
 const addAccount = async (req, res) => {
   try {
-    const user = await User.findById(req.user.id).select('-password');
+    const user = await getUser(req.user.id);
     if (user) {
-      await User.updateOne(
-        {
-          _id: user._id,
-        },
-        {
-          accounts: [...user.accounts, req.body.account],
-        },
-        {
-          runValidators: true,
-        }
-      );
+      await updateUser(user._id, [...user.accounts, req.body.account]);
       return res.status(200).json({
         isError: false,
         message: `Added new account: ${req.body.account.accountName} to the existing list`,
@@ -121,22 +111,12 @@ const deleteAccount = async (req, res) => {
   try {
     const accountToBeDeleted = req.body.account.accountName;
     if (accountToBeDeleted && typeof accountToBeDeleted !== 'undefined') {
-      const user = await User.findById(req.user.id).select('-password');
+      const user = await getUser(req.user.id);
       if (user) {
         const updatedAccounts = [...user.accounts].filter(
           (account) => account.accountName !== accountToBeDeleted
         );
-        await User.updateOne(
-          {
-            _id: user._id,
-          },
-          {
-            accounts: [...updatedAccounts],
-          },
-          {
-            runValidators: true,
-          }
-        );
+        await updateUser(user._id, [...updatedAccounts]);
         return res.status(200).json({
           isError: false,
           message: `Deleted account: ${accountToBeDeleted} from the existing list`,

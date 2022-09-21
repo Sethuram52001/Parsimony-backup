@@ -1,63 +1,17 @@
-const moment = require('moment');
-const Transaction = require('../models/transaction');
-const User = require('../models/user');
-
-const updateUser = async (_id, updatedAccountsList) => {
-  await User.updateOne(
-    {
-      _id,
-    },
-    {
-      accounts: updatedAccountsList,
-    }
-  );
-};
-
-const createTransactionRecord = async (
-  email,
-  transactionType,
-  account,
-  amount,
-  category,
-  description
-) => {
-  await Transaction.create({
-    email,
-    transactionType,
-    account,
-    amount,
-    category,
-    description,
-  });
-};
-
-const updateAccountBalances = (
-  user,
-  transactionAccount,
-  amount,
-  transactionType
-) => {
-  const accountToBeUpdated = user.accounts.filter(
-    (account) => account.accountName === transactionAccount
-  )[0];
-  let updatedBalance = accountToBeUpdated.balance;
-  updatedBalance += transactionType === 'expense' ? -amount : amount;
-  const updatedAccountsList = user.accounts;
-
-  for (const account of updatedAccountsList) {
-    if (account.accountName === transactionAccount) {
-      account.balance = updatedBalance;
-      break;
-    }
-  }
-
-  return updatedAccountsList;
-};
+const {
+  createTransactionRecord,
+  deleteTransactionRecord,
+  updateAccountBalances,
+  updateTransactionRecord,
+  getTransactionRecords,
+  getTransactionByTimePeriod,
+} = require('../services/transactions.services');
+const { getUser, updateUser } = require('../services/user.service');
 
 const createTransaction = async (req, res) => {
   const { transactionType, amount, accounts, category, description } = req.body;
   try {
-    const user = await User.findById(req.user.id).select('-password');
+    const user = await getUser(req.user.id);
     const transactionAccount = accounts[0];
     const updatedAccountsList = updateAccountBalances(
       user,
@@ -91,20 +45,13 @@ const updateTransaction = async (req, res) => {
   const { transactionType, account, amount, category, description } = req.body;
 
   try {
-    await Transaction.updateOne(
-      {
-        _id: transactionId,
-      },
-      {
-        transactionType,
-        account,
-        amount,
-        category,
-        description,
-      },
-      {
-        runValidators: true,
-      }
+    await updateTransactionRecord(
+      transactionId,
+      transactionType,
+      account,
+      amount,
+      category,
+      description
     );
     return res.status(200).json({
       isError: false,
@@ -119,9 +66,7 @@ const updateTransaction = async (req, res) => {
 const deleteTransaction = async (req, res) => {
   const { transactionId } = req.params;
   try {
-    await Transaction.deleteOne({
-      _id: transactionId,
-    });
+    await deleteTransactionRecord(transactionId);
     return res.status(200).json({
       isError: false,
       message: 'Successfully deleted the transaction record!',
@@ -135,7 +80,7 @@ const deleteTransaction = async (req, res) => {
 const transferTypeTransaction = async (req, res) => {
   const { transactionType, amount, accounts, category, description } = req.body;
   try {
-    const user = await User.findById(req.user.id).select('-password');
+    const user = await getUser(req.user.id);
     const accountCredited = accounts[0];
     const accountDebited = accounts[1];
     const updatedAccountsListCredit = updateAccountBalances(
@@ -183,11 +128,9 @@ const transferTypeTransaction = async (req, res) => {
 };
 
 const getTransactions = async (req, res) => {
-  const { email } = await User.findById(req.user.id).select('email');
+  const { email } = await getUser(req.user.id);
   try {
-    const transactions = await Transaction.find({ email })
-      .sort({ createdAt: -1 })
-      .exec();
+    const transactions = await getTransactionRecords(email);
     return res.status(200).json({ isError: false, transactions });
   } catch (error) {
     console.log(error);
@@ -196,39 +139,9 @@ const getTransactions = async (req, res) => {
 };
 
 const getTransactionsByDate = async (req, res) => {
-  const { email } = await User.findById(req.user.id).select('email');
-  const { timeSpan } = req.query;
-  let fromDate, toDate;
-  if (timeSpan === 'Day') {
-    const { date } = req.query;
-    fromDate = moment(date).set({ hour: 0, minute: 0, second: 0 });
-    toDate = moment(fromDate).add(1, 'day');
-  } else if (timeSpan === 'Month') {
-    let { date: month } = req.query;
-    month = moment().month(month).format('M') - 1;
-    fromDate = moment().set({ month, date: 1, hour: 0, minute: 0, second: 0 });
-    toDate = moment(fromDate).add(1, 'month');
-  } else if (timeSpan === 'Year') {
-    const { date: year } = req.query;
-    fromDate = moment().set({
-      year,
-      month: 0,
-      date: 1,
-      hour: 0,
-      minute: 0,
-      second: 0,
-    });
-    toDate = moment(fromDate).add(1, 'year');
-  }
-
+  const { email } = await getUser(req.user.id);
   try {
-    const transactions = await Transaction.find({
-      email,
-      createdAt: {
-        $gte: fromDate,
-        $lt: toDate,
-      },
-    }).sort({ createdAt: 'desc' });
+    const transactions = await getTransactionByTimePeriod(email, req);
     return res.status(200).json({ isError: false, transactions });
   } catch (error) {
     console.log(error);
