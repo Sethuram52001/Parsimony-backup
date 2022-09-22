@@ -2,12 +2,12 @@ const express = require('express');
 const cors = require('cors');
 const transaction = require('./routes/transaction');
 const user = require('./routes/user');
-const mongoose = require('mongoose');
+const db = require('./db');
 const app = express();
 const port = 5000;
 
 require('dotenv').config();
-mongoose.connect('mongodb://localhost:27017/Parsimony');
+db.connectToMongoDB();
 
 app.use(cors());
 app.use(express.json());
