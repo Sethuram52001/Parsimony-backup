@@ -15,7 +15,7 @@ const createUser = async ({ name, email, password, accounts }) => {
   return await User.create({
     name,
     email,
-    hashedPassword,
+    password: hashedPassword,
     accounts,
   });
 };
