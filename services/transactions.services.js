@@ -2,7 +2,7 @@ const moment = require('moment');
 const Transaction = require('../models/transaction');
 
 const createTransactionRecord = async (
-  email,
+  userId,
   transactionType,
   account,
   amount,
@@ -10,7 +10,7 @@ const createTransactionRecord = async (
   description
 ) => {
   await Transaction.create({
-    email,
+    userId,
     transactionType,
     account,
     amount,
@@ -73,11 +73,11 @@ const updateTransactionRecord = async (
   );
 };
 
-const getTransactionRecords = async (email) => {
-  return await Transaction.find({ email }).sort({ createdAt: -1 }).exec();
+const getTransactionRecords = async (userId) => {
+  return await Transaction.find({ userId }).sort({ createdAt: -1 }).exec();
 };
 
-const getTransactionByTimePeriod = async (email, req) => {
+const getTransactionByTimePeriod = async (userId, req) => {
   const { timeSpan } = req.query;
   let fromDate, toDate;
   if (timeSpan === 'Day') {
@@ -103,7 +103,7 @@ const getTransactionByTimePeriod = async (email, req) => {
   }
 
   return await Transaction.find({
-    email,
+    userId,
     createdAt: {
       $gte: fromDate,
       $lt: toDate,

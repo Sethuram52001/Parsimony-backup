@@ -22,7 +22,7 @@ const createTransaction = async (req, res) => {
 
     await updateUser(user._id, updatedAccountsList);
     await createTransactionRecord(
-      user.email,
+      user._id,
       transactionType,
       transactionAccount,
       amount,
@@ -92,7 +92,7 @@ const transferTypeTransaction = async (req, res) => {
 
     await updateUser(user._id, updatedAccountsListCredit);
     await createTransactionRecord(
-      user.email,
+      user._id,
       transactionType,
       accountCredited,
       amount,
@@ -109,7 +109,7 @@ const transferTypeTransaction = async (req, res) => {
 
     await updateUser(user._id, updatedAccountsListDebit);
     await createTransactionRecord(
-      user.email,
+      user._id,
       transactionType,
       accountDebited,
       amount,
@@ -128,9 +128,9 @@ const transferTypeTransaction = async (req, res) => {
 };
 
 const getTransactions = async (req, res) => {
-  const { email } = await getUser(req.user.id);
+  const user = await getUser(req.user.id);
   try {
-    const transactions = await getTransactionRecords(email);
+    const transactions = await getTransactionRecords(user._id);
     return res.status(200).json({ isError: false, transactions });
   } catch (error) {
     console.log(error);
@@ -139,9 +139,9 @@ const getTransactions = async (req, res) => {
 };
 
 const getTransactionsByDate = async (req, res) => {
-  const { email } = await getUser(req.user.id);
+  const user = await getUser(req.user.id);
   try {
-    const transactions = await getTransactionByTimePeriod(email, req);
+    const transactions = await getTransactionByTimePeriod(user._id, req);
     return res.status(200).json({ isError: false, transactions });
   } catch (error) {
     console.log(error);
