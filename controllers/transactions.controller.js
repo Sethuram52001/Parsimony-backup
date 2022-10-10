@@ -5,6 +5,9 @@ const {
   updateTransactionRecord,
   getTransactionRecords,
   getTransactionByTimePeriod,
+  updateAccountBalance,
+  getTransactionByID,
+  updateAccountBalanceOnDeletion,
 } = require('../services/transactions.services');
 const { getUser, updateUser } = require('../services/user.service');
 
@@ -45,6 +48,16 @@ const updateTransaction = async (req, res) => {
   const { transactionType, account, amount, category, description } = req.body;
 
   try {
+    const user = await getUser(req.user.id);
+
+    const transaction = await getTransactionByID(transactionId);
+    const updatedAccountsList = updateAccountBalance(
+      user,
+      transaction.account,
+      amount - transaction.amount
+    );
+    await updateUser(user._id, updatedAccountsList);
+
     await updateTransactionRecord(
       transactionId,
       transactionType,
@@ -53,6 +66,7 @@ const updateTransaction = async (req, res) => {
       category,
       description
     );
+
     return res.status(200).json({
       isError: false,
       message: 'Successfully updated the transaction record!',
@@ -66,6 +80,15 @@ const updateTransaction = async (req, res) => {
 const deleteTransaction = async (req, res) => {
   const { transactionId } = req.params;
   try {
+    const user = await getUser(req.user.id);
+    const transaction = await getTransactionByID(transactionId);
+    const updatedAccountsList = updateAccountBalanceOnDeletion(
+      user,
+      transaction.account,
+      transaction.transactionType,
+      transaction.amount
+    );
+    await updateUser(user._id, updatedAccountsList);
     await deleteTransactionRecord(transactionId);
     return res.status(200).json({
       isError: false,

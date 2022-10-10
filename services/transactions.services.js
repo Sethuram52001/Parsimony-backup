@@ -77,6 +77,11 @@ const getTransactionRecords = async (userId) => {
   return await Transaction.find({ userId }).sort({ createdAt: -1 }).exec();
 };
 
+const getTransactionByID = async (transactionId) => {
+  const transaction = await Transaction.findOne({ _id: transactionId });
+  return transaction;
+};
+
 const getTransactionByTimePeriod = async (userId, req) => {
   const { timeSpan } = req.query;
   let fromDate, toDate;
@@ -111,11 +116,43 @@ const getTransactionByTimePeriod = async (userId, req) => {
   }).sort({ createdAt: 'desc' });
 };
 
+const updateAccountBalance = (user, transactionAccount, updatedAmount) => {
+  const updatedAccountsList = user.accounts;
+  for (const account of updatedAccountsList) {
+    if (account.accountName === transactionAccount) {
+      account.balance += updatedAmount;
+      break;
+    }
+  }
+
+  return updatedAccountsList;
+};
+
+const updateAccountBalanceOnDeletion = (
+  user,
+  transactionAccount,
+  transactionType,
+  amount
+) => {
+  const updatedAccountsList = user.accounts;
+  for (const account of updatedAccountsList) {
+    if (account.accountName === transactionAccount) {
+      account.balance += transactionType === 'expense' ? amount : -amount;
+      break;
+    }
+  }
+
+  return updatedAccountsList;
+};
+
 module.exports = {
   createTransactionRecord,
   deleteTransactionRecord,
   updateAccountBalances,
   updateTransactionRecord,
   getTransactionRecords,
+  getTransactionByID,
   getTransactionByTimePeriod,
+  updateAccountBalance,
+  updateAccountBalanceOnDeletion,
 };
