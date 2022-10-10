@@ -8,6 +8,7 @@ const {
   updateAccountBalance,
   getTransactionByID,
   updateAccountBalanceOnDeletion,
+  updateAccountBalanceOnAccountChange,
 } = require('../services/transactions.services');
 const { getUser, updateUser } = require('../services/user.service');
 
@@ -49,14 +50,27 @@ const updateTransaction = async (req, res) => {
 
   try {
     const user = await getUser(req.user.id);
+    if (account !== undefined) {
+      const transaction = await getTransactionByID(transactionId);
+      const updatedAccountsList = updateAccountBalanceOnAccountChange(
+        user,
+        transaction.account,
+        account,
+        transaction.transactionType,
+        transaction.amount
+      );
+      await updateUser(user._id, updatedAccountsList);
+    }
 
-    const transaction = await getTransactionByID(transactionId);
-    const updatedAccountsList = updateAccountBalance(
-      user,
-      transaction.account,
-      amount - transaction.amount
-    );
-    await updateUser(user._id, updatedAccountsList);
+    if (amount !== undefined) {
+      const transaction = await getTransactionByID(transactionId);
+      const updatedAccountsList = updateAccountBalance(
+        user,
+        transaction.account,
+        amount - transaction.amount
+      );
+      await updateUser(user._id, updatedAccountsList);
+    }
 
     await updateTransactionRecord(
       transactionId,

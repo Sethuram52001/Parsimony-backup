@@ -145,6 +145,31 @@ const updateAccountBalanceOnDeletion = (
   return updatedAccountsList;
 };
 
+const updateAccountBalanceOnAccountChange = (
+  user,
+  oldAccount,
+  updatedAccount,
+  transactionType,
+  amount
+) => {
+  const updatedAccountsList = user.accounts;
+  let updatedOldAccount = false;
+  let updatedNewAccount = false;
+  for (const account of updatedAccountsList) {
+    if (updatedOldAccount && updatedNewAccount) {
+      break;
+    }
+    if (account.accountName === oldAccount) {
+      account.balance += transactionType === 'expense' ? amount : -amount;
+      updatedOldAccount = true;
+    } else if (account.accountName === updatedAccount) {
+      account.balance += transactionType === 'expense' ? -amount : amount;
+      updatedNewAccount = true;
+    }
+  }
+  return updatedAccountsList;
+};
+
 module.exports = {
   createTransactionRecord,
   deleteTransactionRecord,
@@ -155,4 +180,5 @@ module.exports = {
   getTransactionByTimePeriod,
   updateAccountBalance,
   updateAccountBalanceOnDeletion,
+  updateAccountBalanceOnAccountChange,
 };
