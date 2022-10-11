@@ -7,7 +7,8 @@
   "author": "Sethuram <sethuram52001@gmail.com>",
   "license": "MIT",
   "scripts": {
-    "dev": "nodemon server",
+    "dev": "NODE_ENV=development nodemon index",
+    "test": "NODE_ENV=test jest",
     "execute-husky": "npx husky install && npx husky add .husky/pre-commit \"npx --no-install lint-staged\"",
     "prepare": "husky install"
   },
@@ -17,14 +18,17 @@
     }
   },
   "devDependencies": {
+    "config": "^3.3.8",
     "eslint": "^8.0.1",
     "eslint-config-standard": "^17.0.0",
     "eslint-plugin-import": "^2.25.2",
     "eslint-plugin-n": "^15.0.0",
     "eslint-plugin-promise": "^6.0.0",
     "husky": "^8.0.1",
+    "jest": "^29.1.2",
     "lint-staged": "^13.0.3",
-    "prettier": "^2.7.1"
+    "prettier": "^2.7.1",
+    "supertest": "^6.3.0"
   },
   "lint-staged": {
     "**/*.{js,jsx,ts,tsx}": [

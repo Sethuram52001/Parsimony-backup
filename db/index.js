@@ -1,7 +1,8 @@
 const mongoose = require('mongoose');
+const config = require('config');
 
 const connectToMongoDB = () => {
-  mongoose.connect(process.env.MONGO_URI);
+  mongoose.connect(config.get('database'));
 };
 
 module.exports = {

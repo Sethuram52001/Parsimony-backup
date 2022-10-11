@@ -1,0 +1,5 @@
+{
+  "name": "test server",
+  "database": "mongodb://localhost:27017/ParsimonyTest",
+  "port": "5001"
+}
