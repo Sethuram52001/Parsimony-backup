@@ -118,6 +118,17 @@ const transferTypeTransaction = async (req, res) => {
   const { transactionType, amount, accounts, category, description } = req.body;
   try {
     const user = await getUser(req.user.id);
+    if (accounts.length !== 2) {
+      throw new Error(
+        '2 accounts must be selected to perform a transfer type transaction'
+      );
+    }
+    if (amount === undefined) {
+      throw new Error(
+        'Amount must be defined to create a transfer type transaction'
+      );
+    }
+
     const accountCredited = accounts[0];
     const accountDebited = accounts[1];
     const updatedAccountsListCredit = updateAccountBalances(
