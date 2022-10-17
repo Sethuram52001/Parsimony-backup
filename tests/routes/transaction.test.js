@@ -10,9 +10,9 @@ const testTransaction = {
 };
 
 const testUser = {
-  email: 'test@gmail.com',
-  name: 'test',
-  password: 'test',
+  email: 'transactionTest@gmail.com',
+  name: 'transactionTest',
+  password: 'transactionTest',
   accounts: [
     {
       accountName: 'gpay',
@@ -356,8 +356,9 @@ describe('Transfer type transaction creation', () => {
 });
 
 describe('Retreive transactions by date', () => {
+  const year = moment().year();
+
   it('should not retreive transactions without authorization token', async () => {
-    const year = moment().year();
     const res = await request(app).get(
       `/api/transaction/get-transactions-by-date?timeSpan=Year&date=${year}`
     );
@@ -368,7 +369,6 @@ describe('Retreive transactions by date', () => {
   });
 
   it('should not retreive transactions with invalid token', async () => {
-    const year = moment().year();
     const res = await request(app)
       .get(
         `/api/transaction/get-transactions-by-date?timeSpan=Year&date=${year}`
@@ -381,13 +381,13 @@ describe('Retreive transactions by date', () => {
   });
 
   it('should retreive transactions when provided with valid token', async () => {
-    const year = moment().year();
-    console.log(year);
     const res = await request(app)
       .get(
         `/api/transaction/get-transactions-by-date?timeSpan=Year&date=${year}`
       )
       .set('x-auth-token', token);
+
+    console.log(res.body.transactions);
 
     expect(res.statusCode).toEqual(200);
     expect(res.body.isError).toEqual(false);
