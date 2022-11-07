@@ -1,0 +1,268 @@
+const mongoose = require('mongoose');
+const { getMockReq } = require('@jest-mock/express');
+const Transaction = require('../../models/transaction');
+const { connectDB, disconnectDB } = require('./../db/index');
+const { createUser, findUser } = require('../../services/user.service');
+const {
+  createTransactionRecord,
+  getTransactionByID,
+  getTransactionRecords,
+  getTransactionByTimePeriod,
+} = require('../../services/transactions.services');
+
+const testUser = {
+  email: 'test@gmail.com',
+  name: 'test',
+  password: 'test',
+  accounts: [
+    {
+      accountName: 'gpay',
+      balance: 10000,
+    },
+  ],
+};
+let userID;
+
+const testTransaction = {
+  transactionType: 'income',
+  amount: 3500,
+  category: 'Income',
+  accounts: ['bank'],
+};
+let transactionID;
+
+beforeAll(async () => {
+  await connectDB();
+  await createUser(testUser);
+  const res = await findUser('test@gmail.com');
+  userID = JSON.stringify(res._id);
+  testTransaction.userId = userID;
+});
+
+afterAll(async () => {
+  await disconnectDB();
+});
+
+describe('create transaction service', () => {
+  it('should create transaction successfully when provided with proper details without description', async () => {
+    const { userId, transactionType, accounts, amount, category } =
+      testTransaction;
+    const transactionAccount = accounts[0];
+    await createTransactionRecord(
+      userId,
+      transactionType,
+      transactionAccount,
+      amount,
+      category
+    );
+    const res = await Transaction.find({ userId })
+      .sort({ createdAt: -1 })
+      .exec();
+    const transaction = res[0];
+    expect(transaction._id).toBeDefined();
+    expect(transaction.userId).toEqual(testTransaction.userId);
+    expect(transaction.transactionType).toEqual(
+      testTransaction.transactionType
+    );
+    expect(transaction.transactionAccount).toEqual(
+      testTransaction.transactionAccount
+    );
+    expect(transaction.amount).toEqual(testTransaction.amount);
+    expect(transaction.category).toEqual(testTransaction.category);
+  });
+
+  it('should create transaction successfully when provided with proper details with description', async () => {
+    const { userId, transactionType, accounts, amount, category } =
+      testTransaction;
+    const transactionAccount = accounts[0];
+    const description = 'Sample transaction description';
+    await createTransactionRecord(
+      userId,
+      transactionType,
+      transactionAccount,
+      amount,
+      category,
+      description
+    );
+    const res = await Transaction.find({ userId })
+      .sort({ createdAt: -1 })
+      .exec();
+    const transaction = res[0];
+    expect(transaction._id).toBeDefined();
+    expect(transaction.userId).toEqual(testTransaction.userId);
+    expect(transaction.transactionType).toEqual(
+      testTransaction.transactionType
+    );
+    expect(transaction.transactionAccount).toEqual(
+      testTransaction.transactionAccount
+    );
+    expect(transaction.amount).toEqual(testTransaction.amount);
+    expect(transaction.category).toEqual(testTransaction.category);
+    expect(transaction.description).toEqual(description);
+  });
+
+  it('shouldnt create transaction successfully when not provided with proper details', async () => {
+    const { transactionType, accounts, amount, category } = testTransaction;
+    const transactionAccount = accounts[0];
+    let err;
+    try {
+      await createTransactionRecord(
+        transactionType,
+        transactionAccount,
+        amount,
+        category
+      );
+    } catch (error) {
+      err = error;
+    }
+    expect(err).toBeInstanceOf(mongoose.Error.ValidationError);
+  });
+
+  it('shouldnt create transaction successfully when not provided with proper details', async () => {
+    const { userId, accounts, amount, category } = testTransaction;
+    const transactionAccount = accounts[0];
+    let err;
+    try {
+      await createTransactionRecord(
+        userId,
+        transactionAccount,
+        amount,
+        category
+      );
+    } catch (error) {
+      err = error;
+    }
+    expect(err).toBeInstanceOf(mongoose.Error.ValidationError);
+  });
+
+  //
+  it('shouldnt create transaction successfully when not provided with proper details', async () => {
+    const { userId, transactionType, amount, category } = testTransaction;
+    let err;
+    try {
+      await createTransactionRecord(userId, transactionType, amount, category);
+    } catch (error) {
+      err = error;
+    }
+    expect(err).toBeInstanceOf(mongoose.Error.ValidationError);
+  });
+
+  it('shouldnt create transaction successfully when not provided with proper details', async () => {
+    const { userId, transactionType, accounts, category } = testTransaction;
+    const transactionAccount = accounts[0];
+    let err;
+    try {
+      await createTransactionRecord(
+        userId,
+        transactionType,
+        transactionAccount,
+        category
+      );
+    } catch (error) {
+      err = error;
+    }
+    expect(err).toBeInstanceOf(mongoose.Error.ValidationError);
+  });
+
+  it('shouldnt create transaction successfully when not provided with proper details', async () => {
+    const { userId, transactionType, accounts, amount } = testTransaction;
+    const transactionAccount = accounts[0];
+    let err;
+    try {
+      await createTransactionRecord(
+        userId,
+        transactionType,
+        transactionAccount,
+        amount
+      );
+    } catch (error) {
+      err = error;
+    }
+    expect(err).toBeInstanceOf(mongoose.Error.ValidationError);
+  });
+});
+
+describe('Get transaction by user id service', () => {
+  it('should return transaction records of the user when provided with proper id', async () => {
+    const res = await getTransactionRecords(userID);
+    const expectedRes = await Transaction.find({ userID })
+      .sort({ createdAt: -1 })
+      .exec();
+    transactionID = expectedRes[0]._id;
+    expect(res.length).toBe(expectedRes.length);
+    expect(res).toEqual(expectedRes);
+  });
+
+  it('should not return transaction records of the user when not provided with proper id', async () => {
+    const fakeID = '000000000000000000000000';
+    const res = await getTransactionRecords(fakeID);
+    expect(res.length).toBe(0);
+  });
+});
+
+describe('Get transaction by id service', () => {
+  it('should get the correct transaction record when provided with transaction id', async () => {
+    const res = await getTransactionByID(transactionID);
+    const expectedRes = await Transaction.findOne({ _id: transactionID });
+    expect(res).toEqual(expectedRes);
+  });
+
+  it('should return null when provided with invalid transaction id', async () => {
+    const fakeID = '000000000000000000000000';
+    const res = await getTransactionByID(fakeID);
+    expect(res).toBe(null);
+  });
+});
+
+describe('Get transaction by time period', () => {
+  it('should throw error if timespan is not defined', async () => {
+    let err;
+    const req = getMockReq({
+      query: { date: 2022 },
+    });
+
+    try {
+      await getTransactionByTimePeriod(userID, req);
+    } catch (error) {
+      err = error;
+    }
+    expect(err).toBeInstanceOf(Error);
+  });
+
+  it('should throw error if timespan contains illegal value', async () => {
+    let err;
+    const req = getMockReq({
+      query: { timeSpan: 'Yer', date: 2022 },
+    });
+
+    try {
+      await getTransactionByTimePeriod(userID, req);
+    } catch (error) {
+      err = error;
+    }
+    expect(err).toMatchObject(
+      new Error('Time span is not defined or illeagal value for time span')
+    );
+  });
+
+  it('should throw error if date is not defined', async () => {
+    let err;
+    const req = getMockReq({
+      query: { timeSpan: 'Year' },
+    });
+
+    try {
+      await getTransactionByTimePeriod(userID, req);
+    } catch (error) {
+      err = error;
+    }
+    expect(err).toMatchObject(new Error('Date should be defined!'));
+  });
+});
+
+/*
+describe('Delete transaction service', () => {
+  it('should delete record with id', async () => {
+
+  })
+}) */
