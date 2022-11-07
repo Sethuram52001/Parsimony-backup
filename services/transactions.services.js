@@ -84,6 +84,12 @@ const getTransactionByID = async (transactionId) => {
 
 const getTransactionByTimePeriod = async (userId, req) => {
   const { timeSpan } = req.query;
+  if (!['Day', 'Month', 'Year'].includes(timeSpan)) {
+    throw new Error('Time span is not defined or illeagal value for time span');
+  }
+  if (!req.query.date) {
+    throw new Error('Date should be defined!');
+  }
   let fromDate, toDate;
   if (timeSpan === 'Day') {
     const { date } = req.query;
