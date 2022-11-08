@@ -8,6 +8,9 @@ const {
   getTransactionByID,
   getTransactionRecords,
   getTransactionByTimePeriod,
+  deleteTransactionRecord,
+  updateAccountBalance,
+  updateAccountBalanceOnDeletion,
 } = require('../../services/transactions.services');
 
 const testUser = {
@@ -30,6 +33,7 @@ const testTransaction = {
   accounts: ['bank'],
 };
 let transactionID;
+const fakeID = '000000000000000000000000';
 
 beforeAll(async () => {
   await connectDB();
@@ -59,6 +63,7 @@ describe('create transaction service', () => {
       .sort({ createdAt: -1 })
       .exec();
     const transaction = res[0];
+    expect(res.length).toBe(1);
     expect(transaction._id).toBeDefined();
     expect(transaction.userId).toEqual(testTransaction.userId);
     expect(transaction.transactionType).toEqual(
@@ -88,6 +93,7 @@ describe('create transaction service', () => {
       .sort({ createdAt: -1 })
       .exec();
     const transaction = res[0];
+    expect(res.length).toBe(2);
     expect(transaction._id).toBeDefined();
     expect(transaction.userId).toEqual(testTransaction.userId);
     expect(transaction.transactionType).toEqual(
@@ -194,7 +200,6 @@ describe('Get transaction by user id service', () => {
   });
 
   it('should not return transaction records of the user when not provided with proper id', async () => {
-    const fakeID = '000000000000000000000000';
     const res = await getTransactionRecords(fakeID);
     expect(res.length).toBe(0);
   });
@@ -258,11 +263,118 @@ describe('Get transaction by time period', () => {
     }
     expect(err).toMatchObject(new Error('Date should be defined!'));
   });
+
+  it('should return 0 transactions', async () => {
+    const req = getMockReq({
+      query: {
+        timeSpan: 'Year',
+        date: new Date().getFullYear() + 1,
+      },
+    });
+
+    const res = await getTransactionByTimePeriod(userID, req);
+    expect(res.length).toBe(0);
+  });
+
+  it('should return 0 transactions', async () => {
+    const req = getMockReq({
+      query: {
+        timeSpan: 'Month',
+        date: new Date().getMonth() - 1,
+      },
+    });
+
+    const res = await getTransactionByTimePeriod(userID, req);
+    expect(res.length).toBe(0);
+  });
+
+  it('should return 0 transactions', async () => {
+    const req = getMockReq({
+      query: {
+        timeSpan: 'Day',
+        date: new Date().getDate() - 1,
+      },
+    });
+
+    const res = await getTransactionByTimePeriod(userID, req);
+    expect(res.length).toBe(0);
+  });
+
+  it('should return 2 transactions', async () => {
+    const req = getMockReq({
+      query: {
+        timeSpan: 'Year',
+        date: new Date().getFullYear(),
+      },
+    });
+
+    const res = await getTransactionRecords(userID, req);
+    expect(res.length).toBe(2);
+  });
+
+  it('should return 2 transactions', async () => {
+    const req = getMockReq({
+      query: {
+        timeSpan: 'Month',
+        date: new Date().getMonth(),
+      },
+    });
+
+    const res = await getTransactionByTimePeriod(userID, req);
+    expect(res.length).toBe(2);
+  });
+
+  it('should return 2 transactions', async () => {
+    const req = getMockReq({
+      query: {
+        timeSpan: 'Day',
+        date: new Date(),
+      },
+    });
+
+    const res = await getTransactionByTimePeriod(userID, req);
+    expect(res.length).toBe(2);
+  });
 });
 
-/*
 describe('Delete transaction service', () => {
-  it('should delete record with id', async () => {
+  it('should throw error when provided with invalid transaction id', async () => {
+    await deleteTransactionRecord(transactionID);
 
-  })
-}) */
+    const res = await getTransactionByID(transactionID);
+    expect(res).toBe(null);
+  });
+});
+
+describe('Update account balance service', () => {
+  it('should update account balance of the transaction account of the user', () => {
+    const res = updateAccountBalance(
+      JSON.parse(JSON.stringify(testUser)),
+      'gpay',
+      1000
+    );
+    expect(res[0].balance).toBe(11000);
+  });
+});
+
+describe('Update account balance on deletion', () => {
+  it('should update account balance of the transaction account of the user on deletion of transaction', () => {
+    const res = updateAccountBalanceOnDeletion(
+      JSON.parse(JSON.stringify(testUser)),
+      'gpay',
+      'income',
+      1000
+    );
+    expect(res[0].balance).toBe(9000);
+  });
+
+  it('should update account balance of the transaction account of the user on deletion of transaction', () => {
+    const res = updateAccountBalanceOnDeletion(
+      JSON.parse(JSON.stringify(testUser)),
+      'gpay',
+      'expense',
+      1000
+    );
+    expect(res[0].balance).toBe(11000);
+  });
+});
