@@ -11,6 +11,9 @@ const {
   deleteTransactionRecord,
   updateAccountBalance,
   updateAccountBalanceOnDeletion,
+  updateAccountBalanceOnAccountChange,
+  updateAccountBalances,
+  updateTransactionRecord,
 } = require('../../services/transactions.services');
 
 const testUser = {
@@ -347,20 +350,26 @@ describe('Delete transaction service', () => {
 });
 
 describe('Update account balance service', () => {
+  let testUser2;
+  beforeEach(() => {
+    testUser2 = JSON.parse(JSON.stringify(testUser));
+  });
+
   it('should update account balance of the transaction account of the user', () => {
-    const res = updateAccountBalance(
-      JSON.parse(JSON.stringify(testUser)),
-      'gpay',
-      1000
-    );
+    const res = updateAccountBalance(testUser2, 'gpay', 1000);
     expect(res[0].balance).toBe(11000);
   });
 });
 
 describe('Update account balance on deletion', () => {
+  let testUser2;
+  beforeEach(() => {
+    testUser2 = JSON.parse(JSON.stringify(testUser));
+  });
+
   it('should update account balance of the transaction account of the user on deletion of transaction', () => {
     const res = updateAccountBalanceOnDeletion(
-      JSON.parse(JSON.stringify(testUser)),
+      testUser2,
       'gpay',
       'income',
       1000
@@ -370,11 +379,128 @@ describe('Update account balance on deletion', () => {
 
   it('should update account balance of the transaction account of the user on deletion of transaction', () => {
     const res = updateAccountBalanceOnDeletion(
-      JSON.parse(JSON.stringify(testUser)),
+      testUser2,
       'gpay',
       'expense',
       1000
     );
     expect(res[0].balance).toBe(11000);
+  });
+});
+
+describe('Update account balance on account change service', () => {
+  let testUser2;
+  beforeEach(() => {
+    testUser2 = {
+      email: 'test@gmail.com',
+      name: 'test',
+      password: 'test',
+      accounts: [
+        {
+          accountName: 'gpay',
+          balance: 10000,
+        },
+        {
+          accountName: 'bank',
+          balance: 20000,
+        },
+      ],
+    };
+  });
+
+  it('should update account balance on account change', () => {
+    const res = updateAccountBalanceOnAccountChange(
+      testUser2,
+      'gpay',
+      'bank',
+      'income',
+      1000
+    );
+    expect(res[0].balance).toBe(9000);
+    expect(res[1].balance).toBe(21000);
+  });
+
+  it('should update account balance on account change', () => {
+    const res = updateAccountBalanceOnAccountChange(
+      testUser2,
+      'gpay',
+      'bank',
+      'expense',
+      1000
+    );
+    expect(res[0].balance).toBe(11000);
+    expect(res[1].balance).toBe(19000);
+  });
+});
+
+describe('Update account balances service', () => {
+  let testUser2;
+  beforeEach(() => {
+    testUser2 = JSON.parse(JSON.stringify(testUser));
+  });
+
+  it('should update account balance', () => {
+    const res = updateAccountBalances(testUser2, 'gpay', 5000, 'income');
+    expect(res[0].balance).toBe(15000);
+  });
+
+  it('should update account balance', () => {
+    const res = updateAccountBalances(testUser2, 'gpay', 5000, 'expense');
+    expect(res[0].balance).toBe(5000);
+  });
+});
+
+describe('Update transaction record service', () => {
+  beforeEach(async () => {
+    const { userId, transactionType, accounts, amount, category } =
+      testTransaction;
+    const transactionAccount = accounts[0];
+    await createTransactionRecord(
+      userId,
+      transactionType,
+      transactionAccount,
+      amount,
+      category,
+      'Initial transaction'
+    );
+    const res = await Transaction.find({ userId })
+      .sort({ createdAt: -1 })
+      .exec();
+    transactionID = res[0]._id;
+  });
+
+  it('should update transaction record on creation of a transaction', async () => {
+    await updateTransactionRecord(
+      transactionID,
+      'income',
+      'gpay',
+      5000,
+      'Income',
+      'Updated transaction record'
+    );
+    const res = await getTransactionByID(transactionID);
+    expect(res._id).toBeDefined();
+    expect(res.transactionType).toEqual('income');
+    expect(res.account).toEqual('gpay');
+    expect(res.amount).toEqual(5000);
+    expect(res.category).toEqual('Income');
+    expect(res.description).toEqual('Updated transaction record');
+  });
+
+  it('should update transaction record on creation of a transaction', async () => {
+    await updateTransactionRecord(
+      transactionID,
+      'expense',
+      'bank',
+      15000,
+      'Shopping'
+    );
+    const res = await getTransactionByID(transactionID);
+    expect(res._id).toBeDefined();
+    expect(res.transactionType).toBe('expense');
+    expect(res.account).toBe('bank');
+    expect(res.amount).toBe(15000);
+    expect(res.category).toBe('Shopping');
+    expect(res.description).toBe('Initial transaction');
   });
 });
