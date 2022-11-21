@@ -1,4 +1,7 @@
 const app = require('./server');
+const db = require('./db');
+
+db.connectToMongoDB();
 
 const port = process.env.PORT || 5000;
 
