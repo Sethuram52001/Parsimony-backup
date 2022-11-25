@@ -176,8 +176,8 @@ const transferTypeTransaction = async (req, res) => {
 };
 
 const getTransactions = async (req, res) => {
-  const user = await getUser(req.user.id);
   try {
+    const user = await getUser(req.user.id);
     const transactions = await getTransactionRecords(user._id);
     return res.status(200).json({ isError: false, transactions });
   } catch (error) {
@@ -187,8 +187,8 @@ const getTransactions = async (req, res) => {
 };
 
 const getTransactionsByDate = async (req, res) => {
-  const user = await getUser(req.user.id);
   try {
+    const user = await getUser(req.user.id);
     const transactions = await getTransactionByTimePeriod(user._id, req);
     return res.status(200).json({ isError: false, transactions });
   } catch (error) {
