@@ -1,6 +1,8 @@
+import { useState } from 'react';
+import { AspectRatio } from '@mui/joy';
+import { Box, TextField, Button } from '@mui/material';
+import RegistrationFormStudent from '../../assets/images/registration_form.jpg';
 import axios from 'axios';
-import React, { useState } from 'react';
-import { Box, TextField, Button, Typography, Divider } from '@mui/material';
 
 const RegistrationForm = () => {
   const [name, setName] = useState('');
@@ -9,59 +11,67 @@ const RegistrationForm = () => {
 
   const handleRegister = async (event: React.MouseEvent<HTMLElement>) => {
     event.preventDefault();
-    const response = await axios.post(
-      'http://localhost:5000/api/user/register',
-      {
-        name,
-        email,
-        password,
-      }
-    );
-    console.log(response);
+    await axios.post('http://localhost:5000/api/user/register', {
+      name,
+      email,
+      password,
+    });
   };
 
   return (
     <Box
-      component="form"
-      textAlign="center"
-      alignItems="center"
-      sx={{ width: 300 }}
+      sx={{
+        width: '100%',
+        display: 'flex',
+        flexDirection: { xs: 'column', md: 'row' },
+        justifyContent: 'space-around',
+        alignItems: 'center',
+      }}
     >
-      <Typography variant="h4">Register</Typography>
-      <Divider />
-      <TextField
-        variant="filled"
-        label="Name"
-        fullWidth
-        sx={{ mb: 2, mt: 2 }}
-        value={name}
-        onChange={(e) => setName(e.target.value)}
-      />
-      <TextField
-        type="email"
-        variant="filled"
-        label="Email"
-        fullWidth
-        sx={{ mb: 2 }}
-        value={email}
-        onChange={(e) => setEmail(e.target.value)}
-      />
-      <TextField
-        type="password"
-        variant="filled"
-        label="Password"
-        fullWidth
-        sx={{ mb: 2 }}
-        value={password}
-        onChange={(e) => setPassword(e.target.value)}
-      />
-      <Button
-        variant="contained"
-        sx={{ width: '90%' }}
-        onClick={(event) => handleRegister(event)}
+      <Box sx={{ mb: 2, width: { xs: '90%', md: '45%' } }}>
+        <AspectRatio objectFit="contain">
+          <img src={RegistrationFormStudent} alt="register form student icon" />
+        </AspectRatio>
+      </Box>
+      <Box
+        sx={{
+          width: { xs: '90%', md: '45%' },
+          textAlign: 'center',
+          alignItems: 'center',
+        }}
       >
-        Register
-      </Button>
+        <TextField
+          sx={{ mb: 2, width: '90%' }}
+          variant="filled"
+          label="Name"
+          fullWidth
+          value={name}
+          onChange={(e) => setName(e.target.value)}
+        />
+        <TextField
+          sx={{ mb: 2, width: '90%' }}
+          variant="filled"
+          label="Email"
+          fullWidth
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+        />
+        <TextField
+          sx={{ mb: 2, width: '90%' }}
+          variant="filled"
+          label="Password"
+          fullWidth
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+        />
+        <Button
+          sx={{ width: '90%' }}
+          variant="contained"
+          onClick={(e) => handleRegister(e)}
+        >
+          Register
+        </Button>
+      </Box>
     </Box>
   );
 };

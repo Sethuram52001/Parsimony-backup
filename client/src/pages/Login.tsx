@@ -11,7 +11,8 @@ const Login = () => {
       >
         <Paper
           sx={{
-            width: 400,
+            width: 900,
+            height: 400,
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
