@@ -3,6 +3,7 @@ import { Box, List, ListItem, IconButton } from '@mui/material';
 import HomeIcon from '@mui/icons-material/Home';
 import AnalyticsIcon from '@mui/icons-material/Analytics';
 import ReceiptIcon from '@mui/icons-material/Receipt';
+import DashboardIcon from '@mui/icons-material/Dashboard';
 const Sidebar = () => {
   return (
     <Box
@@ -22,9 +23,16 @@ const Sidebar = () => {
         }}
       >
         <ListItem>
-          <Link to="/dashboard">
+          <Link to="/">
             <IconButton>
               <HomeIcon />
+            </IconButton>
+          </Link>
+        </ListItem>
+        <ListItem>
+          <Link to="/dashboard">
+            <IconButton>
+              <DashboardIcon />
             </IconButton>
           </Link>
         </ListItem>

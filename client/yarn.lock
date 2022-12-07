@@ -1622,6 +1622,13 @@
   resolved "https://registry.npmjs.org/@leichtgewicht/ip-codec/-/ip-codec-2.0.4.tgz"
   integrity sha512-Hcv+nVC0kZnQ3tD9GVu5xSMR4VVYOteQIr/hwFPVEvPdlXqgGEuRjiheChHgdM+JyqdgNcmzZOX/tnl0JOiI7A==
 
+"@lottiefiles/react-lottie-player@^3.4.9":
+  version "3.4.9"
+  resolved "https://registry.yarnpkg.com/@lottiefiles/react-lottie-player/-/react-lottie-player-3.4.9.tgz#83a048c60d3634d20802bed735928bdf292fb1e7"
+  integrity sha512-DDhXPGwn29bGZIJvajWNbVJNMr50esKS2nsxZ7j/tu47U+qdJ40qJMLuYFCd8gr4alYpOG1NrgACWvGW7HBrcg==
+  dependencies:
+    lottie-web "^5.7.8"
+
 "@mui/base@5.0.0-alpha.107":
   version "5.0.0-alpha.107"
   resolved "https://registry.yarnpkg.com/@mui/base/-/base-5.0.0-alpha.107.tgz#5547bf3aaea148b58456e6898f74bc183bdcffa9"
@@ -6322,6 +6329,11 @@ loose-envify@^1.1.0, loose-envify@^1.4.0:
   integrity sha512-lyuxPGr/Wfhrlem2CL/UcnUc1zcqKAImBDzukY7Y5F/yQiNdko6+fRLevlw1HgMySw7f611UIY408EtxRSoK3Q==
   dependencies:
     js-tokens "^3.0.0 || ^4.0.0"
+
+lottie-web@^5.7.8:
+  version "5.10.0"
+  resolved "https://registry.yarnpkg.com/lottie-web/-/lottie-web-5.10.0.tgz#72563f22efdcf2b8f7e8359743514930ebaf5f8c"
+  integrity sha512-q2hfqKrGXNkwjSSZjKxf3fWMi0e3ZBc03qBkVWoGbwUJ7BcG+9YXjMPtmmhitzk8Nc6VQ5PRnh9yInPdfq0PZg==
 
 lower-case@^2.0.2:
   version "2.0.2"

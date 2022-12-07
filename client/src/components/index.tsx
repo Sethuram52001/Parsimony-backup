@@ -1,6 +1,6 @@
 import { LoginForm, RegistrationForm } from './Login';
 import { GuestGuard, UserGuard } from './Guard';
-import { Navbar } from './Navbar';
+import { Navbar, Sidebar } from './Navbar';
 import { TransactionsList, Filter } from './Transaction';
 import { LoadingTransactions } from './Loading';
 
@@ -10,6 +10,7 @@ export {
   GuestGuard,
   UserGuard,
   Navbar,
+  Sidebar,
   TransactionsList,
   Filter,
   LoadingTransactions,

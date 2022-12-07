@@ -5,9 +5,9 @@ import {
   GuestGuard,
   UserGuard,
   Navbar,
+  Sidebar,
 } from './components';
-import Sidebar from './components/Navbar/Sidebar';
-import { Login, Dashboard, Transactions } from './pages';
+import { Login, Dashboard, Transactions, LandingPage } from './pages';
 import Grid from '@mui/material/Unstable_Grid2';
 
 const App = () => {
@@ -19,11 +19,15 @@ const App = () => {
           height: '100vh',
         }}
       >
-        <Grid xs={12} md={2} order={{ xs: 2, md: 1 }}>
+        <Grid xs={12}>
+          <Navbar />
+        </Grid>
+        <Grid xs={12} md={2} order={{ xs: 3, md: 2 }}>
           <Sidebar />
         </Grid>
-        <Grid xs={12} md={10} order={{ xs: 1, md: 2 }}>
+        <Grid xs={12} md={10} order={{ xs: 2, md: 3 }}>
           <Routes>
+            <Route path="" element={<LandingPage />} />
             <Route
               path="/login"
               element={
