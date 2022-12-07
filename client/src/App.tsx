@@ -6,6 +6,7 @@ import {
   UserGuard,
   Navbar,
   Sidebar,
+  Footer,
 } from './components';
 import { Login, Dashboard, Transactions, LandingPage } from './pages';
 import Grid from '@mui/material/Unstable_Grid2';
@@ -13,12 +14,7 @@ import Grid from '@mui/material/Unstable_Grid2';
 const App = () => {
   return (
     <BrowserRouter>
-      <Grid
-        container
-        sx={{
-          height: '100vh',
-        }}
-      >
+      <Grid container sx={{ height: '100vh' }}>
         <Grid xs={12}>
           <Navbar />
         </Grid>
@@ -49,6 +45,9 @@ const App = () => {
             />
             <Route path="/transactions" element={<Transactions />} />
           </Routes>
+        </Grid>
+        <Grid xs={12} sx={{ backgroundColor: 'red' }} order={{ xs: 4 }}>
+          <Footer />
         </Grid>
       </Grid>
     </BrowserRouter>
