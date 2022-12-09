@@ -5,43 +5,64 @@ import EventBudgetingBreakDown from '../assets/lottie files/event-budgeting-brea
 import BusinessAnalytics from '../assets/lottie files/business-analytics.json';
 import AnimationForWallet from '../assets/lottie files/animation-for-wallet.json';
 import { Typography } from '@mui/material';
+import { Footer } from '../components';
 
 const LandingPage = () => {
   return (
     <Grid container sx={{ height: '100vh' }}>
       <Grid container md={12}>
-        <Grid container md={6}>
+        <Grid container xs={12} md={6}>
           <LottieDisplay lottieFile={ManWithLaptop} />
         </Grid>
-        <Grid container md={6}>
-          <Typography>Welcome to Parsimony,...</Typography>
+        <Grid container xs={12} md={6} sx={{ alignItems: 'center' }}>
+          <Typography align="justify">
+            Welcome to Parsimony, Lorem ipsum dolor sit amet, consectetur
+            adipiscing elit.
+          </Typography>
         </Grid>
       </Grid>
       <Grid container md={12}>
-        <Grid container md={6}>
+        <Grid
+          container
+          xs={12}
+          md={6}
+          sx={{ alignItems: 'center' }}
+          order={{ xs: 2, md: 1 }}
+        >
           <Typography>
-            You can plan and track your expenses blah blah
+            You can plan and track your expenses, Lorem ipsum dolor sit amet,
+            consectetur adipiscing elit.
           </Typography>
         </Grid>
-        <Grid container md={6}>
+        <Grid container xs={12} md={6} order={{ xs: 1, md: 2 }}>
           <LottieDisplay lottieFile={EventBudgetingBreakDown} />
         </Grid>
       </Grid>
       <Grid container md={12}>
-        <Grid container md={6}>
+        <Grid container xs={12} md={6}>
           <LottieDisplay lottieFile={BusinessAnalytics} />
         </Grid>
-        <Grid container md={6}>
+        <Grid container xs={12} md={6} sx={{ alignItems: 'center' }}>
           <Typography>
-            You can use analytics to view ur spendings blah blah
+            You can use analytics to view ur spendings, Lorem ipsum dolor sit
+            amet, consectetur adipiscing elit.
           </Typography>
         </Grid>
       </Grid>
       <Grid container md={12}>
-        <Grid container md={6}>
-          <Typography>You can manage accounts....</Typography>
+        <Grid
+          container
+          xs={12}
+          md={6}
+          sx={{ alignItems: 'center' }}
+          order={{ xs: 2, md: 1 }}
+        >
+          <Typography>
+            You can manage accounts, Lorem ipsum dolor sit amet, consectetur
+            adipiscing elit.
+          </Typography>
         </Grid>
-        <Grid container md={6}>
+        <Grid container xs={12} md={6} order={{ xs: 1, md: 2 }}>
           <LottieDisplay lottieFile={AnimationForWallet} />
         </Grid>
       </Grid>

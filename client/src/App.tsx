@@ -46,9 +46,6 @@ const App = () => {
             <Route path="/transactions" element={<Transactions />} />
           </Routes>
         </Grid>
-        <Grid xs={12} sx={{ backgroundColor: 'red' }} order={{ xs: 4 }}>
-          <Footer />
-        </Grid>
       </Grid>
     </BrowserRouter>
   );

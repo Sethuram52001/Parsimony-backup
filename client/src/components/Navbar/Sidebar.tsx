@@ -4,13 +4,21 @@ import HomeIcon from '@mui/icons-material/Home';
 import AnalyticsIcon from '@mui/icons-material/Analytics';
 import ReceiptIcon from '@mui/icons-material/Receipt';
 import DashboardIcon from '@mui/icons-material/Dashboard';
+
 const Sidebar = () => {
   return (
     <Box
       sx={{
-        height: '100%',
+        height: { md: '100%' },
+        width: { xs: '100vw', md: 'auto' },
         display: 'flex',
-        alignItems: 'center',
+        alignItems: { xs: 'flex-end', md: 'center' },
+        justifyContent: 'center',
+        position: 'fixed',
+        top: { xs: 'auto', md: '15px' },
+        bottom: { xs: '0', md: 'auto' },
+        left: { md: '20px' },
+        'z-index': '2',
       }}
     >
       <List
@@ -18,8 +26,10 @@ const Sidebar = () => {
         sx={{
           display: 'flex',
           flexDirection: { xs: 'row', md: 'column' },
-          backgroundColor: 'red',
+          backgroundColor: 'aliceblue',
           height: { md: '80%' },
+          borderRadius: '25px',
+          justifyContent: 'space-evenly',
         }}
       >
         <ListItem>
