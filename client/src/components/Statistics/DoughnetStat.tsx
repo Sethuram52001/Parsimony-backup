@@ -9,7 +9,7 @@ const DoughnetStat = () => {
   let transactions;
   const { data, isFetching, isSuccess, isError } = api.useGetTransactionsQuery({
     timeSpan: 'Month',
-    date: 'September',
+    date: 'December',
   });
   if (isFetching) {
   } else if (isSuccess) {
