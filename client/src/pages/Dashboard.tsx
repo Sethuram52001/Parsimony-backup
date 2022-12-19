@@ -1,11 +1,24 @@
-import { Box, Typography } from '@mui/material';
+import { Typography } from '@mui/material';
 import Grid from '@mui/material/Unstable_Grid2/Grid2';
 import AccountCard from '../components/AccountCard/AccountCard';
 import { DoughnetStat } from '../components/Statistics';
 import TransactionsList from '../components/Transaction/TransactionsList';
+import { default as api } from '../store/apiSlice';
+import { LoadingTransactions } from '../components';
 
 const Dashboard = () => {
-  const accounts = [1, 2, 3];
+  let accounts;
+  const { data, isFetching, isSuccess, isError } = api.useGetUserDetailsQuery();
+  if (isFetching) {
+    console.log('fetching');
+  } else if (isSuccess) {
+    console.log(data);
+    const { user } = data;
+    accounts = user.accounts;
+  } else if (isError) {
+    console.log('error');
+  }
+
   return (
     <Grid sx={{ height: '100vh' }}>
       <Grid container md={12}>
@@ -13,9 +26,10 @@ const Dashboard = () => {
           <Typography variant="h5">Your accounts</Typography>
         </Grid>
         <Grid container xs={12}>
-          {accounts.map((account, idx) => (
-            <AccountCard key={idx} />
-          ))}
+          {isFetching
+            ? Array.from(new Array(3)).map((item) => <LoadingTransactions />)
+            : accounts &&
+              accounts.map((account, idx) => <AccountCard {...account} />)}
         </Grid>
       </Grid>
       <Grid container md={12}>
