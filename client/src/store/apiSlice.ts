@@ -16,6 +16,26 @@ interface Transactions {
   transactions: [Transaction];
 }
 
+interface Account {
+  accountName: string;
+  balance: Number;
+  _id: string;
+  createdAt: string;
+  updatedAt: string;
+}
+
+interface UserDetails {
+  _id: string;
+  email: string;
+  name: string;
+  accounts: [Account];
+}
+
+interface getUserDetailsResponse {
+  isError: Boolean;
+  user: UserDetails;
+}
+
 const baseURI = 'http://localhost:5000/api';
 
 export const apiSlice = createApi({
@@ -34,6 +54,11 @@ export const apiSlice = createApi({
     >({
       query: ({ timeSpan, date }) => ({
         url: `/transaction/get-transactions-by-date?timeSpan=${timeSpan}&date=${date}`,
+      }),
+    }),
+    getUserDetails: builder.query<getUserDetailsResponse, void>({
+      query: () => ({
+        url: `/user/info`,
       }),
     }),
   }),
