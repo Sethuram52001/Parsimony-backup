@@ -7,10 +7,11 @@ ChartJS.register(ArcElement, Tooltip);
 
 const DoughnetStat = () => {
   let transactions;
-  const { data, isFetching, isSuccess, isError } = api.useGetTransactionsQuery({
-    timeSpan: 'Month',
-    date: 'December',
-  });
+  const { data, isFetching, isSuccess, isError } =
+    api.useGetTransactionsByDateQuery({
+      timeSpan: 'Month',
+      date: 'December',
+    });
   if (isFetching) {
   } else if (isSuccess) {
     const { transactions: tx } = data;

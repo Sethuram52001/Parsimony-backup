@@ -48,7 +48,7 @@ export const apiSlice = createApi({
     },
   }),
   endpoints: (builder) => ({
-    getTransactions: builder.query<
+    getTransactionsByDate: builder.query<
       Transactions,
       { timeSpan: string; date: string }
     >({

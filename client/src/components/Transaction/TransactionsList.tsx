@@ -7,10 +7,11 @@ const TransactionsList = () => {
   const timeSpan = useSelector((state) => state.filter.timeSpan);
   const date = useSelector((state) => state.filter.date);
   let transactions;
-  const { data, isFetching, isSuccess, isError } = api.useGetTransactionsQuery({
-    timeSpan,
-    date,
-  });
+  const { data, isFetching, isSuccess, isError } =
+    api.useGetTransactionsByDateQuery({
+      timeSpan,
+      date,
+    });
   if (isFetching) {
     console.log('fetching');
   } else if (isSuccess) {
