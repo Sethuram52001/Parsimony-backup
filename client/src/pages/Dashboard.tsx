@@ -19,6 +19,23 @@ const Dashboard = () => {
     console.log('error');
   }
 
+  //let transactions: any[] = [];
+  let transactions: any[] = [];
+  const {
+    data: transactionsData,
+    isFetching: transactionsDataFetching,
+    isSuccess: transactionsDataSuccess,
+    isError: transactionsDataError,
+  } = api.useGetTransactionsQuery();
+  if (transactionsDataFetching) {
+    console.log('fetching transactional data');
+  } else if (transactionsDataSuccess) {
+    console.log(transactionsData);
+    transactions = transactionsData.transactions;
+  } else if (transactionsDataError) {
+    console.log('error in fetching transactional data');
+  }
+
   return (
     <Grid sx={{ height: '100vh' }}>
       <Grid container md={12}>
@@ -46,7 +63,11 @@ const Dashboard = () => {
             <Typography variant="h5">Your past transactions</Typography>
           </Grid>
           <Grid container xs={12}>
-            <TransactionsList />
+            {isFetching
+              ? Array.from(new Array(3)).map((item) => <LoadingTransactions />)
+              : transactions && (
+                  <TransactionsList transactions={transactions} />
+                )}
           </Grid>
         </Grid>
         <Grid container xs={12} md={6}>
@@ -54,7 +75,7 @@ const Dashboard = () => {
             <Typography variant="h5">Upcoming payments</Typography>
           </Grid>
           <Grid container xs={12}>
-            <TransactionsList />
+            <TransactionsList transactions={transactions} />
           </Grid>
         </Grid>
       </Grid>
