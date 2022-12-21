@@ -61,6 +61,11 @@ export const apiSlice = createApi({
         url: `/user/info`,
       }),
     }),
+    getTransactions: builder.query<Transactions, void>({
+      query: () => ({
+        url: `/transaction/get-transactions`,
+      }),
+    }),
   }),
 });
 
