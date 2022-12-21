@@ -19,8 +19,7 @@ const Dashboard = () => {
     console.log('error');
   }
 
-  //let transactions: any[] = [];
-  let transactions: any[] = [];
+  let transactions;
   const {
     data: transactionsData,
     isFetching: transactionsDataFetching,
@@ -75,7 +74,11 @@ const Dashboard = () => {
             <Typography variant="h5">Upcoming payments</Typography>
           </Grid>
           <Grid container xs={12}>
-            <TransactionsList transactions={transactions} />
+            {isFetching
+              ? Array.from(new Array(3)).map((item) => <LoadingTransactions />)
+              : transactions && (
+                  <TransactionsList transactions={transactions} />
+                )}
           </Grid>
         </Grid>
       </Grid>
