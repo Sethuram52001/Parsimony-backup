@@ -34,9 +34,14 @@ const updateUser = async (_id, accounts) => {
   );
 };
 
+const getUserAccounts = async (userId) => {
+  return await User.findById(userId).select('accounts');
+};
+
 module.exports = {
   getUser,
   findUser,
   createUser,
   updateUser,
+  getUserAccounts,
 };
