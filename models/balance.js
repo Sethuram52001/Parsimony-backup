@@ -5,6 +5,7 @@ const balanceSchema = new mongoose.Schema(
     userId: {
       type: String,
       required: true,
+      unique: true,
     },
     balances: {
       type: [Number],
