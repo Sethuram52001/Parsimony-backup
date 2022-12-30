@@ -6,7 +6,10 @@ const {
   createUser,
   updateUser,
 } = require('../services/user.service');
-const { createBalanceRecord } = require('../services/statistics.service');
+const {
+  createBalanceRecord,
+  updateCurrentMonthBalance,
+} = require('../services/statistics.service');
 
 const registerUser = async (req, res) => {
   const user = req.body;
@@ -22,6 +25,7 @@ const registerUser = async (req, res) => {
     const newUser = await createUser(user);
 
     await createBalanceRecord(newUser._id);
+    await updateCurrentMonthBalance(newUser._id);
 
     const payload = {
       user: {
