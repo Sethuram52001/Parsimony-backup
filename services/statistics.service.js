@@ -18,18 +18,22 @@ const getCurrentBalance = async (userId) => {
 };
 
 const updateCurrentMonthBalance = async (userId) => {
-  const currentBalance = await getCurrentBalance(userId);
-  const balanceRecord = await Balance.findOne({ userId });
-  const balances = balanceRecord.balances;
-  balances[moment().month()] = currentBalance;
-  await Balance.updateOne(
-    {
-      userId,
-    },
-    {
-      balances,
-    }
-  );
+  try {
+    const currentBalance = await getCurrentBalance(userId);
+    const balanceRecord = await Balance.findOne({ userId });
+    const balances = balanceRecord.balances;
+    balances[moment().month()] = currentBalance;
+    await Balance.updateOne(
+      {
+        userId,
+      },
+      {
+        balances,
+      }
+    );
+  } catch (error) {
+    console.log(error);
+  }
 };
 
 module.exports = {
