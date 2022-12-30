@@ -5,7 +5,7 @@ const balanceByAccounts = async (req, res) => {
     const userId = await getUser(req.user.id);
     const { accounts } = await getUserAccounts(userId);
     accounts.sort((account1, account2) => account2.balance - account1.balance);
-    return res.status(200).json({ isError: true, accounts });
+    return res.status(200).json({ isError: false, accounts });
   } catch (error) {
     console.log(error);
     return res.status(400).json({ isError: true, error });
