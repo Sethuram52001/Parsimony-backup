@@ -20,15 +20,18 @@ const getCurrentBalance = async (userId) => {
 const updateCurrentMonthBalance = async (userId) => {
   try {
     const currentBalance = await getCurrentBalance(userId);
-    const balanceRecord = await Balance.findOne({ userId });
+    const balanceRecord = await Balance.findOne({ where: { userId } });
     const balances = balanceRecord.balances;
     balances[moment().month()] = currentBalance;
-    await Balance.updateOne(
+    await Balance.findOneAndUpdate(
       {
         userId,
       },
       {
         balances,
+      },
+      {
+        new: true,
       }
     );
   } catch (error) {
