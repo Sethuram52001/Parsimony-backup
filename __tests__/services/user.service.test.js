@@ -6,18 +6,8 @@ const {
   updateUser,
 } = require('../../services/user.service');
 const mongoose = require('mongoose');
+const { testUser } = require('../mocks/users.mock');
 
-const testUser = {
-  email: 'test@gmail.com',
-  name: 'test',
-  password: 'test',
-  accounts: [
-    {
-      accountName: 'gpay',
-      balance: 10000,
-    },
-  ],
-};
 let userID;
 
 beforeAll(async () => {

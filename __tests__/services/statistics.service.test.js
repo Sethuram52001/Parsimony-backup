@@ -7,26 +7,10 @@ const { createUser, findUser } = require('../../services/user.service');
 const { connectDB, disconnectDB } = require('./../db/index');
 const Balance = require('../../models/balance');
 const moment = require('moment');
+const { testUser } = require('../mocks/users.mock');
+const { testTransaction } = require('../mocks/transactions.mock');
 
-const testUser = {
-  email: 'test@gmail.com',
-  name: 'test',
-  password: 'test',
-  accounts: [
-    {
-      accountName: 'gpay',
-      balance: 10000,
-    },
-  ],
-};
 let userID;
-
-const testTransaction = {
-  transactionType: 'income',
-  amount: 3500,
-  category: 'Income',
-  accounts: ['bank'],
-};
 
 beforeAll(async () => {
   await connectDB();

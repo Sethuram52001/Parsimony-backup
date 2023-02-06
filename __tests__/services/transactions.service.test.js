@@ -15,26 +15,9 @@ const {
   updateAccountBalances,
   updateTransactionRecord,
 } = require('../../services/transactions.services');
-
-const testUser = {
-  email: 'test@gmail.com',
-  name: 'test',
-  password: 'test',
-  accounts: [
-    {
-      accountName: 'gpay',
-      balance: 10000,
-    },
-  ],
-};
+const { testUser } = require('../mocks/users.mock');
+const { testTransaction } = require('../mocks/transactions.mock');
 let userID;
-
-const testTransaction = {
-  transactionType: 'income',
-  amount: 3500,
-  category: 'Income',
-  accounts: ['bank'],
-};
 let transactionID;
 const fakeID = '000000000000000000000000';
 

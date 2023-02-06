@@ -1,6 +1,7 @@
 const { connectDB, disconnectDB } = require('./../db/index');
 const request = require('supertest');
 const app = require('../../server');
+const { testUser } = require('../mocks/users.mock');
 
 beforeAll(async () => {
   await connectDB();
@@ -9,18 +10,6 @@ beforeAll(async () => {
 afterAll(async () => {
   await disconnectDB();
 });
-
-const testUser = {
-  email: 'test@gmail.com',
-  name: 'test',
-  password: 'test',
-  accounts: [
-    {
-      accountName: 'gpay',
-      balance: 10000,
-    },
-  ],
-};
 
 describe('User registration route', () => {
   it('should register new user when provided with email, name, password and accounts', async () => {

@@ -2,14 +2,9 @@ const { connectDB, disconnectDB } = require('./../db/');
 const request = require('supertest');
 const moment = require('moment');
 const app = require('../../server');
+const { testTransaction } = require('../mocks/transactions.mock');
 
 let token, transactionID;
-const testTransaction = {
-  transactionType: 'income',
-  amount: 3500,
-  category: 'Income',
-  accounts: ['bank'],
-};
 
 beforeAll(async () => {
   await connectDB();

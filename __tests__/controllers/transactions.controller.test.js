@@ -14,11 +14,10 @@ const {
   createTransactionRecord,
   getTransactionRecords,
 } = require('../../services/transactions.services');
+const { testUser } = require('../mocks/users.mock');
 
-const testUser = {
-  email: 'test@gmail.com',
-  name: 'test',
-  password: 'test',
+const testUser2 = {
+  ...testUser,
   accounts: [
     {
       accountName: 'gpay',
@@ -35,7 +34,7 @@ let testUserID, testTransactionID;
 
 beforeAll(async () => {
   await connectDB();
-  await createUser(testUser);
+  await createUser(testUser2);
   let res = await findUser('test@gmail.com');
   testUserID = res._id;
   await createTransactionRecord(

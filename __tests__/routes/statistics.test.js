@@ -1,12 +1,11 @@
 const { connectDB, disconnectDB } = require('./../db/index');
 const request = require('supertest');
 const app = require('../../server');
+const { testUser } = require('../mocks/users.mock');
 
 let token;
-const testUser = {
-  email: 'test@gmail.com',
-  name: 'test',
-  password: 'test',
+const testUser2 = {
+  ...testUser,
   accounts: [
     {
       accountName: 'gpay',
@@ -21,7 +20,7 @@ const testUser = {
 
 beforeAll(async () => {
   await connectDB();
-  const res = await request(app).post('/api/user/register').send(testUser);
+  const res = await request(app).post('/api/user/register').send(testUser2);
 
   token = res.body.token;
 });
@@ -36,7 +35,7 @@ describe('Statistics - get accounts by balance', () => {
       .get('/api/statistics/balance-by-accounts')
       .set('x-auth-token', token);
     const accounts = res.body.accounts.map((account) => account.balance);
-    const expectedRes = testUser.accounts
+    const expectedRes = testUser2.accounts
       .sort((account1, account2) => account2.balance - account1.balance)
       .map((account) => account.balance);
     expect(res.statusCode).toBe(200);
