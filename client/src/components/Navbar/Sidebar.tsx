@@ -54,9 +54,11 @@ const Sidebar = () => {
           </Link>
         </ListItem>
         <ListItem>
-          <IconButton>
-            <AnalyticsIcon />
-          </IconButton>
+          <Link to="/analytics">
+            <IconButton>
+              <AnalyticsIcon />
+            </IconButton>
+          </Link>
         </ListItem>
       </List>
     </Box>

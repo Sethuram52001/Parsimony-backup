@@ -8,7 +8,13 @@ import {
   Sidebar,
   Footer,
 } from './components';
-import { Login, Dashboard, Transactions, LandingPage } from './pages';
+import {
+  Login,
+  Dashboard,
+  Transactions,
+  LandingPage,
+  Analytics,
+} from './pages';
 import Grid from '@mui/material/Unstable_Grid2';
 
 const App = () => {
@@ -44,6 +50,7 @@ const App = () => {
               }
             />
             <Route path="/transactions" element={<Transactions />} />
+            <Route path="/analytics" element={<Analytics />} />
           </Routes>
         </Grid>
       </Grid>
